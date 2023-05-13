@@ -8,7 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = { "com.ftn.sbnz.service" })
 public class ServiceApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {

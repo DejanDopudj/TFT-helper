@@ -1,5 +1,7 @@
 package com.ftn.sbnz.model;
 
+import com.ftn.sbnz.model.Augment;
+import com.ftn.sbnz.model.Composition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

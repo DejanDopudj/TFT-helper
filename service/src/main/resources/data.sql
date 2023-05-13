@@ -37,6 +37,7 @@ VALUES
     ('Thrill_I', 0),
     ('Thrill_II', 1);
 
+<<<<<<< HEAD
 INSERT INTO Component (name)
 VALUES
     ('Recurve_bow'),

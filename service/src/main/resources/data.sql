@@ -37,7 +37,7 @@ VALUES
     ('Thrill_I', 0),
     ('Thrill_II', 1);
 
-<<<<<<< HEAD
+
 INSERT INTO Component (name)
 VALUES
     ('Recurve_bow'),
@@ -326,3 +326,5 @@ VALUES
     ('Aegies_quickdraw', 'Ezreal', 50),
     ('Aegies_quickdraw', 'Lee_Sin', 50),
     ('Aegies_quickdraw', 'Vi', 50);
+=======
+>>>>>>> Add more data

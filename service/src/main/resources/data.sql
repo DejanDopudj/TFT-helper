@@ -37,6 +37,27 @@ VALUES
     ('Thrill_I', 0),
     ('Thrill_II', 1);
 
+INSERT INTO Component (name)
+VALUES
+    ('Recurve_bow'),
+    ('Chain_vest'),
+    ('Tear_of_the_Goddess'),
+    ('Giants_belt'),
+    ('B_F_Sword'),
+    ('Negatrons_cloak');
+
+INSERT INTO Item (name)
+VALUES
+    ('ZZ_rot'),
+    ('Titans_resolve'),
+    ('Gargoyle_Stoneplate'),
+    ('Warmogs'),
+    ('Rageblade'),
+    ('Statiks_shiv'),
+    ('Dragons_claw');
+
+
+
 INSERT INTO Composition_Augment (composition_name, augment_name, connection)
 VALUES
     ('Ox_force_spellslingers', 'Gadgeteen_heart', 0),
@@ -139,3 +160,75 @@ VALUES
     ('Gadgeteens', 'Sureshot_heart', 0),
     ('Gadgeteens', 'Thrill_I', 50),
     ('Gadgeteens', 'Thrill_II', 50);
+
+
+INSERT INTO Composition_Component (composition_name, component_name, connection)
+VALUES
+    ('Gadgeteens', 'Recurve_bow', 0),
+    ('Infiniteams', 'Recurve_bow', 40),
+    ('Lasercorps_brawlers', 'Recurve_bow', 60),
+    ('Ox_force_spellslingers', 'Recurve_bow', 100),
+    ('Aegies_quickdraw', 'Recurve_bow', 100),
+    ('Gadgeteens', 'Chain_vest', 100),
+    ('Infiniteams', 'Chain_vest', 45),
+    ('Lasercorps_brawlers', 'Chain_vest', 20),
+    ('Ox_force_spellslingers', 'Chain_vest', 50),
+    ('Aegies_quickdraw', 'Chain_vest', 100),
+    ('Gadgeteens', 'Tear_of_the_Goddess', 0),
+    ('Infiniteams', 'Tear_of_the_Goddess', 10),
+    ('Lasercorps_brawlers', 'Tear_of_the_Goddess', 25),
+    ('Ox_force_spellslingers', 'Tear_of_the_Goddess', 30),
+    ('Aegies_quickdraw', 'Tear_of_the_Goddess', 0),
+    ('Gadgeteens', 'Giants_belt', 100),
+    ('Infiniteams', 'Giants_belt', 30),
+    ('Lasercorps_brawlers', 'Giants_belt', 60),
+    ('Ox_force_spellslingers', 'Giants_belt', 0),
+    ('Aegies_quickdraw', 'Giants_belt', 80),
+    ('Gadgeteens', 'B_F_Sword', 80),
+    ('Infiniteams', 'B_F_Sword', 40),
+    ('Lasercorps_brawlers', 'B_F_Sword', 50),
+    ('Ox_force_spellslingers', 'B_F_Sword', 85),
+    ('Aegies_quickdraw', 'B_F_Sword', 90),
+    ('Gadgeteens', 'Negatrons_cloak', 70),
+    ('Infiniteams', 'Negatrons_cloak', 80),
+    ('Lasercorps_brawlers', 'Negatrons_cloak', 0),
+    ('Ox_force_spellslingers', 'Negatrons_cloak', 25),
+    ('Aegies_quickdraw', 'Negatrons_cloak', 0);
+
+INSERT INTO Composition_Item (composition_name, item_name, connection)
+VALUES
+    ('Gadgeteens', 'ZZ_rot', 90),
+    ('Infiniteams', 'ZZ_rot', 60),
+    ('Lasercorps_brawlers', 'ZZ_rot', 30),
+    ('Ox_force_spellslingers', 'ZZ_rot', 20),
+    ('Aegies_quickdraw', 'ZZ_rot', 0),
+    ('Gadgeteens', 'Titans_resolve', 100),
+    ('Infiniteams', 'Titans_resolve', 0),
+    ('Lasercorps_brawlers', 'Titans_resolve', 0),
+    ('Ox_force_spellslingers', 'Titans_resolve', 80),
+    ('Aegies_quickdraw', 'Titans_resolve', 50),
+    ('Gadgeteens', 'Gargoyle_Stoneplate', 100),
+    ('Infiniteams', 'Gargoyle_Stoneplate', 50),
+    ('Lasercorps_brawlers', 'Gargoyle_Stoneplate', 50),
+    ('Ox_force_spellslingers', 'Gargoyle_Stoneplate', 20),
+    ('Aegies_quickdraw', 'Gargoyle_Stoneplate', 90),
+    ('Gadgeteens', 'Warmogs', 100),
+    ('Infiniteams', 'Warmogs', 80),
+    ('Lasercorps_brawlers', 'Warmogs', 80),
+    ('Ox_force_spellslingers', 'Warmogs', 90),
+    ('Aegies_quickdraw', 'Warmogs', 100),
+    ('Gadgeteens', 'Rageblade', 0),
+    ('Infiniteams', 'Rageblade', 40),
+    ('Lasercorps_brawlers', 'Rageblade', 80),
+    ('Ox_force_spellslingers', 'Rageblade', 95),
+    ('Aegies_quickdraw', 'Rageblade', 100),
+    ('Gadgeteens', 'Statiks_shiv', 0),
+    ('Infiniteams', 'Statiks_shiv', 40),
+    ('Lasercorps_brawlers', 'Statiks_shiv', 40),
+    ('Ox_force_spellslingers', 'Statiks_shiv', 90),
+    ('Aegies_quickdraw', 'Statiks_shiv', 100),
+    ('Gadgeteens', 'Dragons_claw', 50),
+    ('Infiniteams', 'Dragons_claw', 30),
+    ('Lasercorps_brawlers', 'Dragons_claw', 100),
+    ('Ox_force_spellslingers', 'Dragons_claw', 40),
+    ('Aegies_quickdraw', 'Dragons_claw', 10);

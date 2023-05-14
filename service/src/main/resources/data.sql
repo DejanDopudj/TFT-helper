@@ -326,5 +326,3 @@ VALUES
     ('Aegies_quickdraw', 'Ezreal', 50),
     ('Aegies_quickdraw', 'Lee_Sin', 50),
     ('Aegies_quickdraw', 'Vi', 50);
-=======
->>>>>>> Add more data

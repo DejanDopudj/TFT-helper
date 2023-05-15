@@ -1,6 +1,6 @@
 package com.ftn.sbnz.service.repository;
 
-import com.ftn.sbnz.service.model.CompositionChampion;
+import com.ftn.sbnz.model.CompositionChampion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,15 +1,23 @@
 package com.ftn.sbnz.model;
 
 import jakarta.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Game {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    private int round;
+    private Streak streak;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Item> items;
@@ -21,9 +29,13 @@ public class Game {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Augment> augments;
 
-    private int hp;
+    @ManyToOne
+    private User user;
 
-    private int level;
-    private int gold;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Player player;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Player> otherPlayers;
 
 }

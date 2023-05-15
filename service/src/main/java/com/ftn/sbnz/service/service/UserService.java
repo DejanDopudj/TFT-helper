@@ -1,6 +1,6 @@
 package com.ftn.sbnz.service.service;
 
-import com.ftn.sbnz.service.model.User;
+import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;

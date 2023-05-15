@@ -1,6 +1,6 @@
 package com.ftn.sbnz.service.repository;
 
-import com.ftn.sbnz.service.model.CompositionItem;
+import com.ftn.sbnz.model.CompositionItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

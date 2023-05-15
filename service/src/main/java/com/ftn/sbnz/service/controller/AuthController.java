@@ -2,7 +2,7 @@ package com.ftn.sbnz.service.controller;
 
 import com.ftn.sbnz.service.dto.JwtAuthenticationRequestDTO;
 import com.ftn.sbnz.service.dto.creation.UserCreationDTO;
-import com.ftn.sbnz.service.model.User;
+import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.service.security.UserTokenState;
 import com.ftn.sbnz.service.service.AuthService;
 import jakarta.validation.Valid;

@@ -1,8 +1,14 @@
 package com.ftn.sbnz.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CompositionAugment {
 
     @Id
@@ -17,5 +23,5 @@ public class CompositionAugment {
     @JoinColumn(name = "augment_name")
     private Augment augment;
 
-    private int value;
+    private int connection;
 }

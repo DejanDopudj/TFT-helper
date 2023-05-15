@@ -3,7 +3,7 @@ package com.ftn.sbnz.service.util;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.ftn.sbnz.service.model.User;
+import com.ftn.sbnz.model.User;
 import io.jsonwebtoken.Claims;
 import com.auth0.jwt.JWT;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,10 +1,10 @@
 package com.ftn.sbnz.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.ftn.sbnz.service.model.Champion;
 
 @Entity
 @Data
@@ -13,4 +13,9 @@ import lombok.NoArgsConstructor;
 public class Component {
     @Id
     private String name;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "champion_name")
+    private Champion carry;
+
 }

@@ -6,36 +6,30 @@ VALUES ('ROLE_USER');
 INSERT INTO user_role (user_id, role_id)
 VALUES ('5e8c23b1-5bc8-4d56-8519-09808f3c7bba', 1);
 
-INSERT INTO Composition (name)
-VALUES
-    ('Gadgeteens'),
-    ('Infiniteams'),
-    ('Lasercorps_brawlers'),
-    ('Ox_force_spellslingers'),
-    ('Aegies_quickdraw');
 
-INSERT INTO Augment (name, augment_Class)
+INSERT INTO Augment (name, augment_Class, average_place)
 VALUES
-    ('Gadgeteen_heart', 0),
-    ('Gadgeteen_crest', 1),
-    ('Gadgeteen_soul', 2),
-    ('Temper_Tantrum', 3),
-    ('Celestial_Blessing', 1),
-    ('Ascension', 1),
-    ('Threat_Level_Maximum', 1),
-    ('Infiniteam_heart', 0),
-    ('Infiniteam_crest', 1),
-    ('Admin_heart', 0),
-    ('Ox_force_heart', 0),
-    ('Ox_force_crest', 1),
-    ('Duelist_heart', 0),
-    ('Duelist_crest', 1),
-    ('Exiles', 1),
-    ('Trade_sector', 1),
-    ('Golden_Ticket', 2),
-    ('Sureshot_heart', 0),
-    ('Thrill_I', 0),
-    ('Thrill_II', 1);
+    ('Gadgeteen_heart', 0, '4.02'),
+    ('Gadgeteen_crest', 1, '4.04'),
+    ('Gadgeteen_soul', 2, '4.09'),
+    ('Temper_Tantrum', 3, '4.15'),
+    ('Celestial_Blessing', 1, '4.35'),
+    ('Ascension', 1, '4.45'),
+    ('Threat_Level_Maximum', 1, '4.6'),
+    ('Infiniteam_heart', 0, '3.91'),
+    ('Infiniteam_crest', 1, '4.02'),
+    ('Admin_heart', 0, '4.75'),
+    ('Ox_force_heart', 0, '4.59'),
+    ('Ox_force_crest', 1, '4.28'),
+    ('Duelist_heart', 0, '4.3'),
+    ('Duelist_crest', 1, '4.41'),
+    ('Exiles', 1, '4.32'),
+    ('Trade_sector', 1, '4.3'),
+    ('Golden_Ticket', 2, '4.5'),
+    ('Sureshot_heart', 0, '4.40'),
+    ('Thrill_I', 0, '4.59'),
+    ('Thrill_II', 1, '4.57');
+
 
 
 INSERT INTO Component (name)
@@ -97,6 +91,15 @@ VALUES
     ('Miss_fortune', 5),
     ('Kayle', 1),
     ('Lee_Sin', 2);
+
+
+INSERT INTO Composition (name, champion_name)
+VALUES
+    ('Gadgeteens', 'Gnar'),
+    ('Infiniteams', 'Ultimate_Ezreal'),
+    ('Lasercorps_brawlers', 'Warwick'),
+    ('Ox_force_spellslingers', 'Twisted_Fate'),
+    ('Aegies_quickdraw', 'Kaisa');
 
 
 INSERT INTO Composition_Augment (composition_name, augment_name, connection)
@@ -235,6 +238,40 @@ VALUES
     ('Lasercorps_brawlers', 'Negatrons_cloak', 0),
     ('Ox_force_spellslingers', 'Negatrons_cloak', 25),
     ('Aegies_quickdraw', 'Negatrons_cloak', 0);
+
+INSERT INTO Champion_Component (champion_name, component_name, connection)
+VALUES
+    ('Gnar', 'Recurve_bow', 0),
+    ('Ultimate_Ezreal', 'Recurve_bow', 40),
+    ('Warwick', 'Recurve_bow', 60),
+    ('Twisted_Fate', 'Recurve_bow', 100),
+    ('Kaisa', 'Recurve_bow', 100),
+    ('Gnar', 'Chain_vest', 100),
+    ('Ultimate_Ezreal', 'Chain_vest', 45),
+    ('Warwick', 'Chain_vest', 20),
+    ('Twisted_Fate', 'Chain_vest', 50),
+    ('Kaisa', 'Chain_vest', 100),
+    ('Gnar', 'Tear_of_the_Goddess', 0),
+    ('Ultimate_Ezreal', 'Tear_of_the_Goddess', 10),
+    ('Warwick', 'Tear_of_the_Goddess', 25),
+    ('Twisted_Fate', 'Tear_of_the_Goddess', 30),
+    ('Kaisa', 'Tear_of_the_Goddess', 0),
+    ('Gnar', 'Giants_belt', 100),
+    ('Ultimate_Ezreal', 'Giants_belt', 30),
+    ('Warwick', 'Giants_belt', 60),
+    ('Twisted_Fate', 'Giants_belt', 0),
+    ('Kaisa', 'Giants_belt', 80),
+    ('Gnar', 'B_F_Sword', 80),
+    ('Ultimate_Ezreal', 'B_F_Sword', 40),
+    ('Warwick', 'B_F_Sword', 50),
+    ('Twisted_Fate', 'B_F_Sword', 85),
+    ('Kaisa', 'B_F_Sword', 90),
+    ('Gnar', 'Negatrons_cloak', 70),
+    ('Ultimate_Ezreal', 'Negatrons_cloak', 80),
+    ('Warwick', 'Negatrons_cloak', 0),
+    ('Twisted_Fate', 'Negatrons_cloak', 25),
+    ('Kaisa', 'Negatrons_cloak', 0);
+
 
 INSERT INTO Composition_Item (composition_name, item_name, connection)
 VALUES

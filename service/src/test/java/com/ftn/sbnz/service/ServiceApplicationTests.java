@@ -2,6 +2,11 @@ package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.model.event.RoundResultEvent;
+import com.ftn.sbnz.service.repository.AugmentRepository;
+import com.ftn.sbnz.service.repository.ComponentRepository;
+import com.ftn.sbnz.service.repository.CompositionRepository;
+import com.ftn.sbnz.service.repository.ItemRepository;
+import com.ftn.sbnz.service.service.RuleService;
 import org.junit.jupiter.api.Test;
 import org.kie.api.KieServices;
 import org.kie.api.builder.Message;
@@ -10,6 +15,7 @@ import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.utils.KieHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.drools.template.ObjectDataCompiler;
 
@@ -17,8 +23,25 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 @SpringBootTest
 class ServiceApplicationTests {
+
+	@Autowired
+	AugmentRepository augmentRepository;
+	@Autowired
+	CompositionRepository compositionRepository;
+	@Autowired
+	ItemRepository itemRepository;
+	@Autowired
+	ComponentRepository componentRepository;
+
+	@Autowired
+	RuleService ruleService;
 
 	@Test
 	void hello() {
@@ -34,6 +57,9 @@ class ServiceApplicationTests {
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kc = ks.newKieClasspathContainer();
 		KieSession ksession = kc.newKieSession("cepKsession");
+		Game game = createGame();
+		ksession.insert(game);
+		ksession.setGlobal("ruleService", ruleService);
 		long ruleFireCount = ksession.fireAllRules();
 		System.out.println(ruleFireCount);
 	}
@@ -144,21 +170,44 @@ void generateTemplate() {
 		ksession.fireAllRules();
 	}
 
-	private KieSession createKieSessionFromDRL(String drl){
+	private KieSession createKieSessionFromDRL(String drl) {
 		KieHelper kieHelper = new KieHelper();
 		kieHelper.addContent(drl, ResourceType.DRL);
 
 		Results results = kieHelper.verify();
 
-		if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
+		if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)) {
 			List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
 			for (Message message : messages) {
-				System.out.println("Error: "+message.getText());
+				System.out.println("Error: " + message.getText());
 			}
 
 			throw new IllegalStateException("Compilation errors were found. Check the logs.");
 		}
 
 		return kieHelper.build().newKieSession();
+	}
+
+	public Game createGame(){
+		List<Augment> augments = augmentRepository.findAll();
+		Game game = new Game();
+		game.setUsername("test");
+		game.setChampions(new ArrayList<>());
+		game.setAugments(new ArrayList<>());
+		game.setAugmentChoice(new ArrayList<>(Arrays.asList(augments.get(0),augments.get(1),augments.get(2))));
+		List<Composition> compositions = compositionRepository.findAll();
+		List<Component> components = componentRepository.findAll();
+		game.setItems(new ArrayList<>());
+		game.setComposition(null);
+		game.setCompValue(new HashMap<>());
+		game.setComponents(new ArrayList<>(Arrays.asList(components.get(0),components.get(1),components.get(3))));
+		for(Composition composition : compositions){
+			game.getCompValue().put(composition, 0.0);
+		}
+		game.setPhase(0);
+		game.setHp(0);
+		game.setLevel(1);
+		game.setGold(0);
+		return game;
 	}
 }

@@ -1,0 +1,44 @@
+template header
+minHp
+maxHpIncluded
+minGoldIncluded
+maxGoldIncluded
+minLevelIncluded
+maxLevelIncluded
+minRoundIncluded
+maxRoundIncluded
+streak
+action
+
+package template;
+
+import com.ftn.sbnz.model.Game;
+import com.ftn.sbnz.model.Player;
+import com.ftn.sbnz.model.GameAction;
+import com.ftn.sbnz.model.Streak;
+
+template "classification-rules"
+
+rule "Categorize Actions_@{row.rowNumber}"
+no-loop true
+when
+    $game: Game(
+        round >= @{minRoundIncluded},
+        round <= @{maxRoundIncluded},
+        streak == Streak.@{streak}
+    )
+    $player: Player(
+        hp > @{minHp},
+        hp <= @{maxHpIncluded},
+        gold >= @{minGoldIncluded},
+        gold <= @{maxGoldIncluded},
+        level >= @{minLevelIncluded},
+        level <= @{maxLevelIncluded},
+        hp > @{minHp},
+        hp > @{minHp}
+    ) from $game.getPlayer();
+then
+    System.out.println("Adequate actions is: @{action}");
+end
+
+end template

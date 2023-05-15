@@ -6,9 +6,15 @@ import org.kie.api.runtime.KieContainer;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication(scanBasePackages = { "com.ftn.sbnz.service" })
+@SpringBootApplication(scanBasePackages = { "com.ftn.sbnz.service", "com.ftn.sbnz.model"})
+@EnableJpaRepositories({"com.ftn.sbnz.service", "com.ftn.sbnz.model"})
+@ComponentScan(basePackages = { "com.ftn.sbnz.service", "com.ftn.sbnz.model"})
+@EntityScan({"com.ftn.sbnz.service", "com.ftn.sbnz.model"})
 public class ServiceApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {

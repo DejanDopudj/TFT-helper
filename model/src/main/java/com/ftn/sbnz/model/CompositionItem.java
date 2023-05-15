@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service.model;
+package com.ftn.sbnz.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

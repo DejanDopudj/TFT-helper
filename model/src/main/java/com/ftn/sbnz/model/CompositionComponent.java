@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service.model;
+package com.ftn.sbnz.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompositionChampion {
+public class CompositionComponent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +20,8 @@ public class CompositionChampion {
     private Composition composition;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "champion_name")
-    private Champion champion;
+    @JoinColumn(name = "component_name")
+    private Component component;
 
     private int connection;
 }

@@ -3,7 +3,7 @@ package com.ftn.sbnz.service.service;
 import com.ftn.sbnz.service.dto.JwtAuthenticationRequestDTO;
 import com.ftn.sbnz.service.dto.creation.UserCreationDTO;
 import com.ftn.sbnz.service.exception.UserAlreadyExistsException;
-import com.ftn.sbnz.service.model.User;
+import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.service.repository.UserRepository;
 import com.ftn.sbnz.service.security.UserTokenState;
 import com.ftn.sbnz.service.util.TokenUtils;

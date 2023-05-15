@@ -1,12 +1,16 @@
-package com.ftn.sbnz.service.model;
+package com.ftn.sbnz.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name="ROLE")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;

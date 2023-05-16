@@ -18,7 +18,7 @@ rule "Hello"
         System.out.println("Hello world!");
 end
 
-rule "AAA"
+rule "Write round result"
     no-loop true
     when
         $game: Game()
@@ -36,6 +36,7 @@ rule "End win streak"
         $s: WinStreakEvent()
     then
 		System.out.println("DELETED WIN STREAK");
+		modify($game) { setStreak(Streak.NONE) }
         delete($s);
 end
 
@@ -47,6 +48,7 @@ rule "End loss streak"
         not RoundResultEvent(this after $r)
         $s: LossStreakEvent()
     then
+		modify($game) { setStreak(Streak.NONE) }
 		System.out.println("DELETED LOSS STREAK");
         delete($s);
 end

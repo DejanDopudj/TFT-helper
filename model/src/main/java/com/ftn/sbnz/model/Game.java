@@ -17,7 +17,7 @@ public class Game {
     private Long id;
 
     private int round;
-    private Streak streak;
+    private Streak streak = Streak.NONE;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Item> items;

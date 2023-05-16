@@ -1,0 +1,84 @@
+package cep;
+
+import com.ftn.sbnz.model.event.RoundResultEvent;
+import com.ftn.sbnz.model.event.WinStreakEvent;
+import com.ftn.sbnz.model.event.LossStreakEvent;
+import com.ftn.sbnz.model.RoundResult;
+import com.ftn.sbnz.model.Game
+import com.ftn.sbnz.model.Streak;
+
+declare window LastRoundResultEvents
+    RoundResultEvent() over window:length(3)
+end
+
+rule "Hello"
+    when
+        eval(5 > 3);
+    then
+        System.out.println("Hello world!");
+end
+
+rule "AAA"
+    no-loop true
+    when
+        $game: Game()
+        $r: RoundResultEvent()
+    then
+		System.out.println("> " + $r.getResult());
+end
+
+rule "End win streak"
+    no-loop true
+    when
+        $game: Game()
+        RoundResultEvent($t: timestamp, result == RoundResult.LOSS)
+        not(RoundResultEvent(timestamp > $t))
+        $s: WinStreakEvent()
+    then
+		System.out.println("DELETED WIN STREAK");
+        delete($s);
+end
+
+rule "End loss streak"
+    no-loop true
+    when
+        $game: Game()
+        $r: RoundResultEvent(result == RoundResult.WIN)
+        not RoundResultEvent(this after $r)
+        $s: LossStreakEvent()
+    then
+		System.out.println("DELETED LOSS STREAK");
+        delete($s);
+end
+
+rule "Detect Win Streak"
+    no-loop true
+    when
+        $game: Game()
+        $resultEvent: RoundResultEvent()
+        Number(intValue == 3) from accumulate (
+            $event: RoundResultEvent(result == RoundResult.WIN) from window LastRoundResultEvents,
+            count($event)
+        )
+        not(WinStreakEvent())
+    then
+        System.out.println("WIN STREAK");
+        modify ($game) { setStreak(Streak.WIN) }
+        insert(new WinStreakEvent());
+end
+
+rule "Detect Loss Streak"
+no-loop true
+when
+    $game: Game()
+    $resultEvent: RoundResultEvent()
+    Number(intValue == 3) from accumulate (
+        $event: RoundResultEvent(result == RoundResult.LOSS) from window LastRoundResultEvents,
+        count($event)
+    )
+    not(LossStreakEvent())
+then
+    System.out.println("LOSS STREAK");
+    modify ($game) { setStreak(Streak.LOSS) }
+    insert(new LossStreakEvent());
+end

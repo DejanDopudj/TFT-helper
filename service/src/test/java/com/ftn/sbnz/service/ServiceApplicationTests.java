@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.model.*;
+import com.ftn.sbnz.model.event.RoundResultEvent;
 import org.junit.jupiter.api.Test;
 import org.kie.api.KieServices;
 import org.kie.api.builder.Message;
@@ -23,7 +24,59 @@ class ServiceApplicationTests {
 	void hello() {
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kc = ks.newKieClasspathContainer();
+		KieSession ksession = kc.newKieSession("rulesKsession");
+		long ruleFireCount = ksession.fireAllRules();
+		System.out.println(ruleFireCount);
+	}
+
+	@Test
+	void helloCep() {
+		KieServices ks = KieServices.Factory.get();
+		KieContainer kc = ks.newKieClasspathContainer();
 		KieSession ksession = kc.newKieSession("cepKsession");
+		long ruleFireCount = ksession.fireAllRules();
+		System.out.println(ruleFireCount);
+	}
+
+	@Test
+	void winLossCep() throws InterruptedException {
+		KieServices ks = KieServices.Factory.get();
+		KieContainer kc = ks.newKieClasspathContainer();
+		KieSession ksession = kc.newKieSession("cepKsession");
+
+		Game game = new Game();
+		ksession.insert(game);
+		ksession.insert(new RoundResultEvent(RoundResult.WIN));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.WIN));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.WIN));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.LOSS));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.WIN));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.WIN));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.WIN));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.LOSS));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.LOSS));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.LOSS));
+		ksession.fireAllRules();
+		Thread.sleep(200);
+		ksession.insert(new RoundResultEvent(RoundResult.WIN));
 		long ruleFireCount = ksession.fireAllRules();
 		System.out.println(ruleFireCount);
 	}

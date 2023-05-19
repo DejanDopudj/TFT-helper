@@ -9,6 +9,7 @@ import com.ftn.sbnz.service.model.Carry;
 import com.ftn.sbnz.service.service.RuleService;
 import java.util.Map
 import java.util.List;
+import java.util.HashMap;
 
 global RuleService ruleService;
 
@@ -63,23 +64,27 @@ rule "CompositionUpdate"
 no-loop
 when
     $currentGame: Game(username == "test", phase == 1)
+    $map: HashMap() from accumulate(
+        $entry: Map.Entry($key: key, $value: value) from $currentGame.getCompValue().entrySet(),
+        init(HashMap resultMap = new HashMap();),
+        action(resultMap.put($key, (double)$value +
+        (double)(ruleService.getAugmentCompositionConnection($currentGame.getAugments().get($currentGame.getAugments().size() - 1)
+                        ,(Composition)$key) / 2)
+        );),
+        result(resultMap)
+    )
+    $maxEntry: Map.Entry($maxKey: key, $maxValue: value) from accumulate(
+        $entry: Map.Entry($key: key, $value: value) from $map.entrySet(),
+        init(Map.Entry<Composition, Double> maxEntry = null; double maxValue = Double.MIN_VALUE;),
+        action(if ((double)$value > (double)maxValue) { maxValue = (double)$value; maxEntry = $entry; }),
+        result(maxEntry)
+    )
 then
-    Composition comp = null;
-    Double maxValue = (double) -1;
-    for (Map.Entry<Composition, Double> entry : $currentGame.getCompValue().entrySet()){
-        modify($currentGame) {
-            addCompValue(entry.getKey(), entry.getValue()/2 +
-            (ruleService.getAugmentCompositionConnection($currentGame.getAugments().get($currentGame.getAugments().size() - 1)
-            ,entry.getKey()) / 2))
-        };
-        if(entry.getValue() > maxValue){
-            maxValue = entry.getValue();
-            comp = entry.getKey();
-        }
-    };
-    System.out.println($currentGame.getAugments().get($currentGame.getAugments().size() - 1).getName() + " " +comp.getName() + " " + maxValue);
     modify($currentGame) {
-        setComposition(comp)
+        setCompValue($map)
+    };
+    modify($currentGame) {
+        setComposition((Composition)$maxEntry.getKey())
     };
     modify($currentGame) {
         setPhase(2)

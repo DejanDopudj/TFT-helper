@@ -10,6 +10,7 @@ import com.ftn.sbnz.service.service.RuleService;
 import java.util.Map
 import java.util.List;
 import java.util.HashMap;
+import java.lang.Math;
 
 global RuleService ruleService;
 
@@ -41,9 +42,9 @@ no-loop
         )
     then
         int index;
-        $aug1 = ruleService.getAugmentCompositionConnection($augment1, $currentGame.getComposition()) * $augment1.getAveragePlace() / ($aug1.intValue() * 0.5 + 1);
-        $aug2 = ruleService.getAugmentCompositionConnection($augment2, $currentGame.getComposition()) * $augment2.getAveragePlace() / ($aug2.intValue() * 0.5 + 1);
-        $aug3 = ruleService.getAugmentCompositionConnection($augment3, $currentGame.getComposition()) * $augment3.getAveragePlace() / ($aug3.intValue() * 0.5 + 1);
+        $aug1 = ruleService.getAugmentCompositionConnection($augment1, $currentGame.getComposition()) * $augment1.getAveragePlace() * -0.5 * Math.pow($aug1.intValue(), 3) + 2.5 * Math.pow($aug1.intValue(), 2) - 2 * $aug1.intValue() + 1;
+        $aug2 = ruleService.getAugmentCompositionConnection($augment2, $currentGame.getComposition()) * $augment2.getAveragePlace() * -0.5 * Math.pow($aug2.intValue(), 3) + 2.5 * Math.pow($aug2.intValue(), 2) - 2 * $aug2.intValue() + 1;
+        $aug3 = ruleService.getAugmentCompositionConnection($augment3, $currentGame.getComposition()) * $augment3.getAveragePlace() * -0.5 * Math.pow($aug3.intValue(), 3) + 2.5 * Math.pow($aug3.intValue(), 2) - 2 * $aug3.intValue() + 1;
         System.out.println($aug1 + " " + $aug2 + " " + $aug3);
         if ($aug1.intValue() >= $aug2.intValue() && $aug1.intValue() >= $aug3.intValue()) {
             index = 1;
@@ -86,6 +87,7 @@ then
     modify($currentGame) {
         setComposition((Composition)$maxEntry.getKey())
     };
+    System.out.println(((Composition)$maxEntry.getKey()).getName());
     modify($currentGame) {
         setPhase(2)
     };

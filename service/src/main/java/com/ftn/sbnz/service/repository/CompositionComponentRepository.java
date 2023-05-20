@@ -12,6 +12,5 @@ import java.util.Optional;
 @Repository
 public interface CompositionComponentRepository extends JpaRepository<CompositionComponent, Integer> {
 
-    List<ChampionComponent> findByChampionAndConnectionIsGreaterThan(Champion champion, Integer connection);
 
 }

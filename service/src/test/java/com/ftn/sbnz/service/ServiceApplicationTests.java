@@ -56,7 +56,7 @@ class ServiceApplicationTests {
 	void helloCep() {
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kc = ks.newKieClasspathContainer();
-		KieSession ksession = kc.newKieSession("cepKsession");
+		KieSession ksession = kc.newKieSession("rulesKsession");
 		Game game = createGame();
 		ksession.insert(game);
 		ksession.setGlobal("ruleService", ruleService);

@@ -1,11 +1,11 @@
 package rules;
 
-import com.ftn.sbnz.service.model.event.AugmentEvent;
-import com.ftn.sbnz.service.model.Game;
-import com.ftn.sbnz.service.model.Composition;
-import com.ftn.sbnz.service.model.Component;
-import com.ftn.sbnz.service.model.Augment;
-import com.ftn.sbnz.service.model.Carry;
+import com.ftn.sbnz.model.event.AugmentEvent;
+import com.ftn.sbnz.model.Game;
+import com.ftn.sbnz.model.Composition;
+import com.ftn.sbnz.model.Component;
+import com.ftn.sbnz.model.Augment;
+import com.ftn.sbnz.model.Carry;
 import com.ftn.sbnz.service.service.RuleService;
 import java.util.Map
 import java.util.List;

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.ftn.sbnz.service.model.Champion;
+import com.ftn.sbnz.model.Champion;
 
 @Entity
 @Data

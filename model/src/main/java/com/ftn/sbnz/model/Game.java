@@ -1,9 +1,14 @@
 package com.ftn.sbnz.model;
 
+import com.google.protobuf.MapEntry;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tools.ant.taskdefs.PathConvert;
+import org.springframework.data.util.Pair;
+import  java.util.AbstractMap.SimpleEntry;
+
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +35,8 @@ public class Game {
     private List<Champion> champions;
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Augment> augments;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Augment> augmentChoice;
+    @Transient
+    private List<SimpleEntry<Augment, Double>> augmentChoice;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Composition composition;
@@ -47,7 +52,7 @@ public class Game {
     @Transient
     private Map<Composition, Double> compValue;
     @Transient
-    private int phase;
+    private Double phase;
     private int hp;
 
     private int level;
@@ -57,6 +62,23 @@ public class Game {
     }
     public void addAugment(Augment augment){
         augments.add(augment);
+    }
+    public void addAugmentChoiceValue(Augment augment, Double value) {
+        if(augmentChoice.get(0).getKey().getName().equals(augment.getName())){
+            augmentChoice.set(0, new SimpleEntry<>(augment,value));
+        }
+        else if(augmentChoice.get(1).getKey().getName().equals(augment.getName())){
+            augmentChoice.set(1, new SimpleEntry<>(augment,value));
+        }
+        else
+            augmentChoice.set(2, new SimpleEntry<>(augment,value));
+    }
+
+    public void setPhase(int value){
+        phase = (double) value;
+    }
+    public void setPhase(double value){
+        phase = value;
     }
 
 

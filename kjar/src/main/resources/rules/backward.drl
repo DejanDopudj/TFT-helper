@@ -8,9 +8,27 @@ or
     (AugmentLocation( z, y; ) and isContainedIn( x, z; ) )
 end
 
+query areSiblings(String x, String y)
+    AugmentLocation(x, z;) and AugmentLocation(y, z;)
+end
+
 rule "go1"
 when
     isContainedIn("Gadgeteen_heart", "Gadgeteen_crest"; )
 then
-    System.out.println( "Found" );
+    System.out.println( "Found parent" );
+end
+
+rule "go3"
+   when
+       isContainedIn("Trade_sector", "Gadgeteen_crest"; )
+   then
+       System.out.println( "Found parent" );
+   end
+
+rule "go2"
+when
+    areSiblings("Gadgeteen_crest", "Trade_sector"; )
+then
+    System.out.println( "Found sibling" );
 end

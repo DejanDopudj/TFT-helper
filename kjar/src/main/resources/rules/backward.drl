@@ -1,0 +1,16 @@
+package rules;
+
+import com.ftn.sbnz.model.AugmentLocation;
+
+query isContainedIn( String x, String y )
+    AugmentLocation( x, y; )
+or
+    (AugmentLocation( z, y; ) and isContainedIn( x, z; ) )
+end
+
+rule "go1"
+when
+    isContainedIn("Gadgeteen_heart", "Gadgeteen_crest"; )
+then
+    System.out.println( "Found" );
+end

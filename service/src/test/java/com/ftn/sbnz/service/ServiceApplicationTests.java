@@ -2,10 +2,8 @@ package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.model.event.RoundResultEvent;
-import com.ftn.sbnz.service.repository.AugmentRepository;
-import com.ftn.sbnz.service.repository.ComponentRepository;
-import com.ftn.sbnz.service.repository.CompositionRepository;
-import com.ftn.sbnz.service.repository.ItemRepository;
+import com.ftn.sbnz.model.AugmentLocation;
+import com.ftn.sbnz.service.repository.*;
 import com.ftn.sbnz.service.service.RuleService;
 import org.junit.jupiter.api.Test;
 import org.kie.api.KieServices;
@@ -39,6 +37,8 @@ class ServiceApplicationTests {
 	ItemRepository itemRepository;
 	@Autowired
 	ComponentRepository componentRepository;
+	@Autowired
+	AugmentLocationRepository augmentLocationRepository;
 
 	@Autowired
 	RuleService ruleService;
@@ -60,6 +60,10 @@ class ServiceApplicationTests {
 		Game game = createGame();
 		ksession.insert(game);
 		ksession.setGlobal("ruleService", ruleService);
+		List<AugmentLocation> augmentLocations = augmentLocationRepository.findAll();
+		for(AugmentLocation augmentLocation : augmentLocations){
+			ksession.insert(augmentLocation);
+		}
 		long ruleFireCount = ksession.fireAllRules();
 		System.out.println(ruleFireCount);
 	}

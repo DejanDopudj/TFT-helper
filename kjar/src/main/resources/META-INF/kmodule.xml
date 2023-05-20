@@ -2,6 +2,9 @@
     <kbase name="rulesKbase" eventProcessingMode="stream" packages="rules">
         <ksession name="rulesKsession"/>
     </kbase>
+    <kbase name="backwardKbase" eventProcessingMode="stream" packages="rulesBackward">
+        <ksession name="backwardKsession"/>
+    </kbase>
     <kbase name="cepKbase" eventProcessingMode="stream" packages="cep">
         <ksession name="cepKsession"/>
     </kbase>

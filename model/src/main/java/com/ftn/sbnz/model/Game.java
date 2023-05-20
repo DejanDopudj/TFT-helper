@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Data
@@ -18,16 +19,22 @@ public class Game {
 
     private int round;
     private Streak streak = Streak.NONE;
+    private String username;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Item> items;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Component> components;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Champion> champions;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Augment> augments;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Augment> augmentChoice;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Composition composition;
 
     @ManyToOne
     private User user;
@@ -37,5 +44,20 @@ public class Game {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Player> otherPlayers;
+    @Transient
+    private Map<Composition, Double> compValue;
+    @Transient
+    private int phase;
+    private int hp;
+
+    private int level;
+    private int gold;
+    public void addCompValue(Composition composition, double value){
+        compValue.put(composition,value);
+    }
+    public void addAugment(Augment augment){
+        augments.add(augment);
+    }
+
 
 }

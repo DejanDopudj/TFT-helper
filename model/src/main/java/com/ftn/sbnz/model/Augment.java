@@ -16,4 +16,6 @@ public class Augment {
     private String name;
 
     private AugmentClass augmentClass;
+
+    private double averagePlace;
 }

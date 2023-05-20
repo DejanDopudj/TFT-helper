@@ -30,6 +30,30 @@ VALUES
     ('Thrill_I', 0, '4.59'),
     ('Thrill_II', 1, '4.57');
 
+INSERT INTO Augment_Location(child, parent)
+VALUES
+    ('Gadgeteen_heart', 'Gadgeteen_crest'),
+    ('Gadgeteen_crest', 'Gadgeteen_soul'),
+    ('Trade_sector', 'Gadgeteen_soul'),
+    ('Celestial_Blessing', 'Gadgeteen_soul'),
+    ('Gadgeteen_soul', 'Temper_tantrum'),
+    ('Infiniteams_heart', 'Infiniteams_crest'),
+    ('Thrill_I', 'Infiniteams_crest'),
+    ('Infiniteams_crest', 'Infiniteams_crown'),
+    ('Thrill_II', 'Infiniteams_crown'),
+    ('Infiniteams_crown', 'Temporal_disruption'),
+    ('Duelist_heart', 'Duelist_crest'),
+    ('Duelist_crest', 'Duelist_soul'),
+    ('Duelist_soul', 'Spreadshot'),
+    ('Thrill_II', 'Duelist_soul'),
+    ('Sureshot_heart', 'Threat_Level_Maximum'),
+    ('Threat_Level_Maximum', 'Electrocharge_III'),
+    ('Electrocharge_III', 'Extinction_Event'),
+    ('Extinction_Event', 'Game'),
+    ('Spreadshot', 'Game'),
+    ('Temper_tantrum', 'Game'),
+    ('Temporal_disruption', 'Game');
+
 
 
 INSERT INTO Component (name)

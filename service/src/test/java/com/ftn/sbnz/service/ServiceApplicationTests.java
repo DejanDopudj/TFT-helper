@@ -2,10 +2,8 @@ package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.model.event.RoundResultEvent;
-import com.ftn.sbnz.service.repository.AugmentRepository;
-import com.ftn.sbnz.service.repository.ComponentRepository;
-import com.ftn.sbnz.service.repository.CompositionRepository;
-import com.ftn.sbnz.service.repository.ItemRepository;
+import com.ftn.sbnz.model.AugmentLocation;
+import com.ftn.sbnz.service.repository.*;
 import com.ftn.sbnz.service.service.RuleService;
 import org.junit.jupiter.api.Test;
 import org.kie.api.KieServices;
@@ -39,27 +37,39 @@ class ServiceApplicationTests {
 	ItemRepository itemRepository;
 	@Autowired
 	ComponentRepository componentRepository;
+	@Autowired
+	AugmentLocationRepository augmentLocationRepository;
 
 	@Autowired
 	RuleService ruleService;
 
-	@Test
-	void hello() {
-		KieServices ks = KieServices.Factory.get();
-		KieContainer kc = ks.newKieClasspathContainer();
-		KieSession ksession = kc.newKieSession("rulesKsession");
-		long ruleFireCount = ksession.fireAllRules();
-		System.out.println(ruleFireCount);
-	}
 
 	@Test
-	void helloCep() {
+	void forwardChaining() {
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kc = ks.newKieClasspathContainer();
 		KieSession ksession = kc.newKieSession("rulesKsession");
 		Game game = createGame();
 		ksession.insert(game);
 		ksession.setGlobal("ruleService", ruleService);
+		long ruleFireCount = ksession.fireAllRules();
+		System.out.println(ruleFireCount);
+	}
+
+	@Test
+	void backwardChaining() {
+		KieServices ks = KieServices.Factory.get();
+		KieContainer kc = ks.newKieClasspathContainer();
+		KieSession ksession = kc.newKieSession("backwardKsession");
+		Augment augment1 = augmentRepository.findAll().get(1);
+		Augment augment2 = augmentRepository.findAll().get(5);
+		ksession.insert(augment1);
+		ksession.insert(augment2);
+		List<AugmentLocation> augmentLocations = augmentLocationRepository.findAll();
+		for(AugmentLocation augmentLocation : augmentLocations){
+			ksession.insert(augmentLocation);
+		}
+		ksession.getAgenda().getAgendaGroup("areConnectedGroup").setFocus();
 		long ruleFireCount = ksession.fireAllRules();
 		System.out.println(ruleFireCount);
 	}

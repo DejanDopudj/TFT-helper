@@ -14,6 +14,7 @@ import java.lang.Math;
 import  java.util.AbstractMap.SimpleEntry;
 
 global RuleService ruleService;
+global List<Double> augmentEventConection;
 
 rule "FirstAugmentUpdate"
 no-loop
@@ -26,11 +27,11 @@ no-loop
         )
     then
         Augment augment = (Augment)$augment1;
-        $aug1 = ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (-0.5 * Math.pow($aug1.intValue(), 3) + 2.5 * Math.pow($aug1.intValue(), 2) - 2 * $aug1.intValue() + 1);
+        $aug1 = ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug1.intValue());
         modify($currentGame) {
             addAugmentChoiceValue(augment, $aug1.doubleValue() )
         };
-        System.out.println(augment);
+        System.out.println(augment + "" + $aug1.doubleValue());
         modify($currentGame) {
             setPhase($currentGame.getPhase() + 1)
         };
@@ -47,7 +48,7 @@ no-loop
         )
     then
         Augment augment = (Augment)$augment2;
-        $aug2 = ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (-0.5 * Math.pow($aug2.intValue(), 3) + 2.5 * Math.pow($aug2.intValue(), 2) - 2 * $aug2.intValue() + 1);
+        $aug2 = ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug2.intValue());
         modify($currentGame) {
             addAugmentChoiceValue(augment, $aug2.doubleValue() )
         };
@@ -69,7 +70,7 @@ no-loop
     then
         Augment augment = (Augment)$augment3;
         $aug3 =
-        ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (-0.5 * Math.pow($aug3.intValue(), 3) + 2.5 * Math.pow($aug3.intValue(), 2) - 2 * $aug3.intValue() + 1);
+        ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug3.intValue());
         modify($currentGame) {
             addAugmentChoiceValue(augment, $aug3.doubleValue() )
         };
@@ -147,7 +148,6 @@ no-loop
 when
     $currentGame: Game(username == "test", phase == 5)
 then
-    System.out.println("set Carry");
     insert(new Carry($currentGame.getComposition().getCarry().getName(), $currentGame.getId(), $currentGame.getUsername(), false));
     modify($currentGame) {
         setPhase($currentGame.getPhase() + 1)

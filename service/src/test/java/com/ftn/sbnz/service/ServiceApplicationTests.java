@@ -50,13 +50,15 @@ class ServiceApplicationTests {
 		KieContainer kc = ks.newKieClasspathContainer();
 		KieSession ksession = kc.newKieSession("rulesKsession");
 		Game game = createGame();
-
+		List<Double> list = new ArrayList<>(Arrays.asList(1.0, 1.1, 1.2, 1.5));
+		Calendar calendar = Calendar.getInstance();
 		ksession.insert(game);
 		AugmentEvent augmentEvent = new AugmentEvent();
-		augmentEvent.setName("Gadgeteens");
-		augmentEvent.setExecutionTime(new Date());
+		augmentEvent.setName("Gadgeteen_heart");
+		augmentEvent.setExecutionTime(calendar.getTime());
 		ksession.insert(augmentEvent);
 		ksession.setGlobal("ruleService", ruleService);
+		ksession.setGlobal("augmentEventConection", list);
 		long ruleFireCount = ksession.fireAllRules();
 		System.out.println(ruleFireCount);
 	}

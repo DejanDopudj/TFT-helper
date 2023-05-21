@@ -31,7 +31,11 @@ class ServiceApplicationTests {
 	@Autowired
 	ComponentRepository componentRepository;
 	@Autowired
+	ChampionRepository championRepository;
+	@Autowired
 	AugmentLocationRepository augmentLocationRepository;
+	@Autowired
+	ChampionLocationRepository championLocationRepository;
 
 	@Autowired
 	RuleService ruleService;
@@ -70,6 +74,24 @@ class ServiceApplicationTests {
 			ksession.insert(augmentLocation);
 		}
 		ksession.getAgenda().getAgendaGroup("areConnectedGroup").setFocus();
+		long ruleFireCount = ksession.fireAllRules();
+		System.out.println(ruleFireCount);
+	}
+
+	@Test
+	void backwardChaining2() {
+		KieServices ks = KieServices.Factory.get();
+		KieContainer kc = ks.newKieClasspathContainer();
+		KieSession ksession = kc.newKieSession("backwardKsession2");
+		Champion champion1 = championRepository.findAll().get(0);
+		Champion champion2 = championRepository.findAll().get(1);
+		ksession.insert(champion1);
+		ksession.insert(champion2);
+		List<ChampionLocation> championLocations = championLocationRepository.findAll();
+		for(ChampionLocation championLocation : championLocations){
+			ksession.insert(championLocation);
+		}
+		ksession.getAgenda().getAgendaGroup("areConnectedGroup2").setFocus();
 		long ruleFireCount = ksession.fireAllRules();
 		System.out.println(ruleFireCount);
 	}

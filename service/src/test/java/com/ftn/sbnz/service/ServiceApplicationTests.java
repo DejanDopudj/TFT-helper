@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.model.*;
+import com.ftn.sbnz.model.event.AugmentEvent;
 import com.ftn.sbnz.model.event.RoundResultEvent;
 import com.ftn.sbnz.model.AugmentLocation;
 import com.ftn.sbnz.service.repository.*;
@@ -18,13 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.drools.template.ObjectDataCompiler;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @SpringBootTest
 class ServiceApplicationTests {
@@ -50,8 +50,15 @@ class ServiceApplicationTests {
 		KieContainer kc = ks.newKieClasspathContainer();
 		KieSession ksession = kc.newKieSession("rulesKsession");
 		Game game = createGame();
+		List<Double> list = new ArrayList<>(Arrays.asList(1.0, 1.1, 1.2, 1.5));
+		Calendar calendar = Calendar.getInstance();
 		ksession.insert(game);
+		AugmentEvent augmentEvent = new AugmentEvent();
+		augmentEvent.setName("Gadgeteen_heart");
+		augmentEvent.setExecutionTime(calendar.getTime());
+		ksession.insert(augmentEvent);
 		ksession.setGlobal("ruleService", ruleService);
+		ksession.setGlobal("augmentEventConection", list);
 		long ruleFireCount = ksession.fireAllRules();
 		System.out.println(ruleFireCount);
 	}
@@ -204,7 +211,9 @@ void generateTemplate() {
 		game.setUsername("test");
 		game.setChampions(new ArrayList<>());
 		game.setAugments(new ArrayList<>());
-		game.setAugmentChoice(new ArrayList<>(Arrays.asList(augments.get(0),augments.get(1),augments.get(2))));
+		game.setAugmentChoice(IntStream.range(0, 3)
+				.mapToObj(i -> new AbstractMap.SimpleEntry<>(augments.get(i), 0.0))
+				.collect(Collectors.toList()));
 		List<Composition> compositions = compositionRepository.findAll();
 		List<Component> components = componentRepository.findAll();
 		game.setItems(new ArrayList<>());

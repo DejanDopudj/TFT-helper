@@ -11,60 +11,106 @@ import java.util.Map
 import java.util.List;
 import java.util.HashMap;
 import java.lang.Math;
+import  java.util.AbstractMap.SimpleEntry;
 
 global RuleService ruleService;
+global List<Double> augmentEventConection;
 
-rule "Hello"
+rule "FirstAugmentUpdate"
+no-loop
     when
-        eval(5 > 3);
+        $currentGame: Game($augment1:augmentChoice.get(0).getKey(), username == "test", phase == 0)
+        $aug1: Number() from accumulate(
+            $e1: AugmentEvent(name == ((Augment)$augment1).getName())
+            over window:time(20s),
+            count($e1)
+        )
     then
-        System.out.println("Hello world!");
+        Augment augment = (Augment)$augment1;
+        $aug1 = ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug1.intValue());
+        modify($currentGame) {
+            addAugmentChoiceValue(augment, $aug1.doubleValue() )
+        };
+        System.out.println(augment + "" + $aug1.doubleValue());
+        modify($currentGame) {
+            setPhase($currentGame.getPhase() + 1)
+        };
+end
+
+rule "SecondAugmentUpdate"
+no-loop
+    when
+        $currentGame: Game($augment2:augmentChoice.get(1).getKey(), username == "test", phase == 1)
+        $aug2: Number() from accumulate(
+            $e1: AugmentEvent(name == ((Augment)$augment2).getName())
+            over window:time(20s),
+            count($e1)
+        )
+    then
+        Augment augment = (Augment)$augment2;
+        $aug2 = ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug2.intValue());
+        modify($currentGame) {
+            addAugmentChoiceValue(augment, $aug2.doubleValue() )
+        };
+        System.out.println(augment + "" + $aug2.doubleValue());
+        modify($currentGame) {
+            setPhase($currentGame.getPhase() + 1)
+        };
+end
+
+rule "ThirdAugmentUpdate"
+no-loop
+    when
+        $currentGame: Game($augment3:augmentChoice.get(2).getKey(), username == "test", phase == 2)
+        $aug3: Number() from accumulate(
+            $e1: AugmentEvent(name == ((Augment)$augment3).getName())
+            over window:time(20s),
+            count($e1)
+        )
+    then
+        Augment augment = (Augment)$augment3;
+        $aug3 =
+        ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug3.intValue());
+        modify($currentGame) {
+            addAugmentChoiceValue(augment, $aug3.doubleValue() )
+        };
+        System.out.println(augment + " " + $aug3.doubleValue());
+        modify($currentGame) {
+            setPhase($currentGame.getPhase() + 1)
+        };
 end
 
 rule "AugmentChoice"
 no-loop
     when
-        $currentGame: Game($augment1: augmentChoice.get(0), $augment2: augmentChoice.get(1), $augment3: augmentChoice.get(2), username == "test", phase == 0)
-        $aug1: Number() from accumulate(
-            $e1: AugmentEvent(name == $augment1.getName())
-            over window:time(20s),
-            count($e1)
-        )
-        $aug2: Number() from accumulate(
-            $e2: AugmentEvent(name == $augment2.getName())
-            over window:time(20s),
-            count($e2)
-        )
-        $aug3: Number() from accumulate(
-            $e3: AugmentEvent(name == $augment3.getName())
-            over window:time(20s),
-            count($e3)
+        $currentGame: Game($augmentChoice:augmentChoice, username == "test", phase == 3)
+        $correctAugment: Augment() from accumulate(
+            SimpleEntry($key: key, $value: value) from $augmentChoice,
+            init(Double minValue = 9999.0;
+                Augment augment = new Augment();
+            ),
+            action(
+                if ((Double)$value < minValue) {
+                    augment = (Augment)$key;
+                    minValue = (Double)$value;
+                }
+            ),
+            result(augment)
         )
     then
-        int index;
-        $aug1 = ruleService.getAugmentCompositionConnection($augment1, $currentGame.getComposition()) * $augment1.getAveragePlace() * -0.5 * Math.pow($aug1.intValue(), 3) + 2.5 * Math.pow($aug1.intValue(), 2) - 2 * $aug1.intValue() + 1;
-        $aug2 = ruleService.getAugmentCompositionConnection($augment2, $currentGame.getComposition()) * $augment2.getAveragePlace() * -0.5 * Math.pow($aug2.intValue(), 3) + 2.5 * Math.pow($aug2.intValue(), 2) - 2 * $aug2.intValue() + 1;
-        $aug3 = ruleService.getAugmentCompositionConnection($augment3, $currentGame.getComposition()) * $augment3.getAveragePlace() * -0.5 * Math.pow($aug3.intValue(), 3) + 2.5 * Math.pow($aug3.intValue(), 2) - 2 * $aug3.intValue() + 1;
-        System.out.println($aug1 + " " + $aug2 + " " + $aug3);
-        if ($aug1.intValue() >= $aug2.intValue() && $aug1.intValue() >= $aug3.intValue()) {
-            index = 1;
-        } else if ($aug2.intValue() >= $aug1.intValue() && $aug2.intValue() >= $aug3.intValue()) {
-            index = 2;
-        } else {
-            index = 3;
-        }
+        System.out.println("Correct augment = " + $correctAugment);
         modify($currentGame) {
-            addAugment($currentGame.getAugmentChoice().get(index))
+            addAugment($correctAugment)
         };
         modify($currentGame) {
-            setPhase(1)
+            setPhase($currentGame.getPhase() + 1)
         };
 end
 
 rule "CompositionUpdate"
 no-loop
 when
-    $currentGame: Game(username == "test", phase == 1)
+    $currentGame: Game(username == "test", phase == 4)
     $map: HashMap() from accumulate(
         $entry: Map.Entry($key: key, $value: value) from $currentGame.getCompValue().entrySet(),
         init(HashMap resultMap = new HashMap();),
@@ -89,19 +135,18 @@ then
     };
     System.out.println(((Composition)$maxEntry.getKey()).getName());
     modify($currentGame) {
-        setPhase(2)
+        setPhase($currentGame.getPhase() + 1)
     };
 end
 
 rule "ChampionsForComposition"
 no-loop
 when
-    $currentGame: Game(username == "test", phase == 2)
+    $currentGame: Game(username == "test", phase == 5)
 then
-    System.out.println("set Carry");
     insert(new Carry($currentGame.getComposition().getCarry().getName(), $currentGame.getId(), $currentGame.getUsername(), false));
     modify($currentGame) {
-        setPhase(3)
+        setPhase($currentGame.getPhase() + 1)
     };
 end
 
@@ -109,15 +154,16 @@ rule "GenerateCarry"
 no-loop
 when
     $carry: Carry(username == "test")
-    $currentGame: Game(username == "test", phase == 3)
+    $currentGame: Game(username == "test", phase == 6)
     eval($currentGame.getComponents().size() > 0)
 then
     List<Component> missingComponents = ruleService.getMissingComponents($carry, $currentGame.getComponents());
-    System.out.println("You are missing: ");
+    System.out.print("You are missing: ");
     for(Component component : missingComponents){
-        System.out.println(component.getName());
+        System.out.print(component.getName() + " ");
     }
+    System.out.println();
     modify($currentGame) {
-        setPhase(4)
+        setPhase($currentGame.getPhase() + 1)
     };
 end

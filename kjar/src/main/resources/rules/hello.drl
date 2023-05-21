@@ -74,12 +74,11 @@ no-loop
         modify($currentGame) {
             addAugmentChoiceValue(augment, $aug3.doubleValue() )
         };
-        System.out.println(augment);
+        System.out.println(augment + " " + $aug3.doubleValue());
         modify($currentGame) {
             setPhase($currentGame.getPhase() + 1)
         };
 end
-
 
 rule "AugmentChoice"
 no-loop
@@ -99,7 +98,7 @@ no-loop
             result(augment)
         )
     then
-        System.out.println("Correct augment" + $correctAugment);
+        System.out.println("Correct augment = " + $correctAugment);
         modify($currentGame) {
             addAugment($correctAugment)
         };
@@ -107,9 +106,6 @@ no-loop
             setPhase($currentGame.getPhase() + 1)
         };
 end
-
-
-
 
 rule "CompositionUpdate"
 no-loop
@@ -162,10 +158,11 @@ when
     eval($currentGame.getComponents().size() > 0)
 then
     List<Component> missingComponents = ruleService.getMissingComponents($carry, $currentGame.getComponents());
-    System.out.println("You are missing: ");
+    System.out.print("You are missing: ");
     for(Component component : missingComponents){
-        System.out.println(component.getName());
+        System.out.print(component.getName() + " ");
     }
+    System.out.println();
     modify($currentGame) {
         setPhase($currentGame.getPhase() + 1)
     };

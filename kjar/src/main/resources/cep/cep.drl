@@ -3,13 +3,32 @@ package cep;
 import com.ftn.sbnz.model.event.RoundResultEvent;
 import com.ftn.sbnz.model.event.WinStreakEvent;
 import com.ftn.sbnz.model.event.LossStreakEvent;
+import com.ftn.sbnz.model.event.PlayerPositionEvent;
+import com.ftn.sbnz.model.event.TurnStartEvent;
 import com.ftn.sbnz.model.RoundResult;
-import com.ftn.sbnz.model.Game
+import com.ftn.sbnz.model.PlayerPosition;
+import com.ftn.sbnz.model.Game;
+import com.ftn.sbnz.model.Player;
 import com.ftn.sbnz.model.Streak;
+import com.ftn.sbnz.model.event.PlayerPositionValueEvent;
+import com.ftn.sbnz.model.event.PlayerPositionChangeEvent;
 
 declare window LastRoundResultEvents
     RoundResultEvent() over window:length(3)
 end
+
+declare window LastPlayerPositionValueEvents
+    PlayerPositionValueEvent() over window:length(2)
+end
+
+declare window LastPlayerPositionChangeEvents
+    PlayerPositionChangeEvent() over window:length(2)
+end
+
+declare window LastPlayerPositionEvents
+    PlayerPositionEvent() over window:length(3)
+end
+
 
 rule "Hello"
     when
@@ -83,4 +102,105 @@ then
     System.out.println("LOSS STREAK");
     modify ($game) { setStreak(Streak.LOSS) }
     insert(new LossStreakEvent());
+end
+
+rule "Detect game start"
+    activation-group "gameStartActivationGroup"
+    no-loop true
+    when
+        Game();
+    then
+        System.out.println("THE GAME HAS STARTED");
+        insert(new PlayerPositionEvent());
+end
+
+rule "Detect turn"
+    when
+        $game: Game()
+        $t: TurnStartEvent();
+    then
+        System.out.println("A TURN HAS STARTED");
+        PlayerPositionValueEvent positionValueEvent = new PlayerPositionValueEvent(
+                0.01 * $game.getPlayer().getGold()
+                + 0.5 * (Boolean.compare($game.getStreak() == Streak.WIN, true) + 1)
+                - 0.5 * (Boolean.compare($game.getStreak() == Streak.LOSS, true) + 1)
+                + 0.05 * ($game.getPlayer().getLevel() - $game.getAverageLevel())
+                + 0.03 * ($game.getPlayer().getHp() - $game.getAverageHp())
+                );
+        System.out.println("VALUE IS: " + positionValueEvent.getValue());
+        insert(positionValueEvent);
+        delete($t);
+end
+
+rule "Calculate player position change"
+    activation-group "calculatePlayerPositionChangeActivationGroup"
+    when
+        $p1: PlayerPositionValueEvent()
+        $p2: PlayerPositionValueEvent(this != $p1)
+        $p2v: Double() from accumulate(
+            $event: PlayerPositionValueEvent(this != $p1) from window LastPlayerPositionValueEvents,
+            sum($event.getValue())
+        )
+    then
+        delete($p2)
+        double valueDiff = $p1.getValue() - $p2v;
+        System.out.println("POSITION VALUE DIFF IS: " + valueDiff);
+        PlayerPositionChangeEvent changeEvent = new PlayerPositionChangeEvent(valueDiff);
+        insert(changeEvent);
+end
+
+rule "Declare neutral player position"
+    when
+        $p: PlayerPositionChangeEvent(value > -0.1, value < 0.1)
+        not(PlayerPositionChangeEvent(this after $p))
+    then
+        System.out.println("NEUTRAL POSITION DECLARED");
+        delete($p);
+        insert(new PlayerPositionEvent(PlayerPosition.NEUTRAL));
+end
+
+rule "Declare negative player position"
+    when
+        $p: PlayerPositionChangeEvent(value < -0.1)
+        not(PlayerPositionChangeEvent(this after $p))
+    then
+        System.out.println("NEGATIVE POSITION DECLARED");
+        delete($p);
+        insert(new PlayerPositionEvent(PlayerPosition.NEGATIVE));
+end
+
+rule "Declare positive player position"
+    when
+        $p: PlayerPositionChangeEvent(value > 0.1)
+        not(PlayerPositionChangeEvent(this after $p))
+    then
+        System.out.println("POSITIVE POSITION DECLARED");
+        delete($p);
+        insert(new PlayerPositionEvent(PlayerPosition.POSITIVE));
+end
+
+rule "Detect bad trend"
+    activation-group "badTrendActivationGroup"
+    when
+        $game: Game()
+        $PPevent: PlayerPositionEvent()
+        Number(intValue == 3) from accumulate (
+            $event: PlayerPositionEvent(position == PlayerPosition.NEGATIVE) from window LastPlayerPositionEvents,
+            count($event)
+        )
+    then
+        System.out.println("BAD TREND. CHANGE YOUR STRATEGY.");
+end
+
+rule "Detect good trend"
+    activation-group "badTrendActivationGroup"
+    when
+        $game: Game()
+        $PPevent: PlayerPositionEvent()
+        Number(intValue == 3) from accumulate (
+            $event: PlayerPositionEvent(position == PlayerPosition.POSITIVE) from window LastPlayerPositionEvents,
+            count($event)
+        )
+    then
+        System.out.println("GREAT TREND. KEEP IT UP.");
 end

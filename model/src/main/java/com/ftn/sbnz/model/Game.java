@@ -82,4 +82,15 @@ public class Game {
     }
 
 
+    public double getAverageLevel() {
+        return (player.getLevel() + otherPlayers.stream()
+                .mapToInt(Player::getLevel)
+                .sum()) / (otherPlayers.size() + 1);
+    }
+
+    public double getAverageHp() {
+        return (player.getHp() + otherPlayers.stream()
+                .mapToInt(Player::getHp)
+                .sum()) / (otherPlayers.size() + 1);
+    }
 }

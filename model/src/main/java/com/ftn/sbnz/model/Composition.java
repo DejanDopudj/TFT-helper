@@ -14,8 +14,8 @@ public class Composition {
     @Id
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "champion_name")
-    private Champion carry;
+    private String offCarry;
+
+    private String defCarry;
 
 }

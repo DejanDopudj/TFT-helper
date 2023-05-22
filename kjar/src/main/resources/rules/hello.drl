@@ -142,9 +142,22 @@ end
 rule "ChampionsForComposition"
 no-loop
 when
-    $currentGame: Game(username == "test", phase == 5)
+    $currentGame: Game(username == "test", phase == 5, $components: components)
+    $itemCount: Number() from accumulate(
+        Component($compType: componentType) from $components,
+        count($compType)
+    )
+    $defensiveItemCount: Number() from accumulate(
+        Component($compType: componentType) from $components,
+        sum($compType.ordinal())
+    )
 then
-    insert(new Carry($currentGame.getComposition().getCarry().getName(), $currentGame.getId(), $currentGame.getUsername(), false));
+    if($itemCount.doubleValue()/2 > $defensiveItemCount.doubleValue()){
+        insert(new Carry($currentGame.getComposition().getOffCarry(), $currentGame.getId(), $currentGame.getUsername(), false));
+    }
+    else{
+        insert(new Carry($currentGame.getComposition().getDefCarry(), $currentGame.getId(), $currentGame.getUsername(), false));
+    }
     modify($currentGame) {
         setPhase($currentGame.getPhase() + 1)
     };

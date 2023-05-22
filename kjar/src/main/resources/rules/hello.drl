@@ -133,7 +133,7 @@ then
     modify($currentGame) {
         setComposition((Composition)$maxEntry.getKey())
     };
-    System.out.println(((Composition)$maxEntry.getKey()).getName());
+    System.out.println("Composition is = " +((Composition)$maxEntry.getKey()).getName());
     modify($currentGame) {
         setPhase($currentGame.getPhase() + 1)
     };
@@ -152,12 +152,15 @@ when
         sum($compType.ordinal())
     )
 then
+    String carry;
     if($itemCount.doubleValue()/2 > $defensiveItemCount.doubleValue()){
-        insert(new Carry($currentGame.getComposition().getOffCarry(), $currentGame.getId(), $currentGame.getUsername(), false));
+        carry = $currentGame.getComposition().getOffCarry();
     }
     else{
-        insert(new Carry($currentGame.getComposition().getDefCarry(), $currentGame.getId(), $currentGame.getUsername(), false));
+        carry = $currentGame.getComposition().getDefCarry();
     }
+    insert(new Carry(carry, $currentGame.getId(), $currentGame.getUsername(), false));
+    System.out.println("Carry is = " + carry);
     modify($currentGame) {
         setPhase($currentGame.getPhase() + 1)
     };

@@ -56,14 +56,14 @@ VALUES
 
 
 
-INSERT INTO Component (name)
+INSERT INTO Component (name, component_type)
 VALUES
-    ('Recurve_bow'),
-    ('Chain_vest'),
-    ('Tear_of_the_Goddess'),
-    ('Giants_belt'),
-    ('B_F_Sword'),
-    ('Negatrons_cloak');
+    ('Recurve_bow',0),
+    ('Chain_vest',1),
+    ('Tear_of_the_Goddess',1),
+    ('Giants_belt',0),
+    ('B_F_Sword',1),
+    ('Negatrons_cloak',0);
 
 INSERT INTO Item (name)
 VALUES
@@ -117,13 +117,13 @@ VALUES
     ('Lee_Sin', 2);
 
 
-INSERT INTO Composition (name, champion_name)
+INSERT INTO Composition (name, off_carry, def_carry)
 VALUES
-    ('Gadgeteens', 'Gnar'),
-    ('Infiniteams', 'Ultimate_Ezreal'),
-    ('Lasercorps_brawlers', 'Warwick'),
-    ('Ox_force_spellslingers', 'Twisted_Fate'),
-    ('Aegies_quickdraw', 'Kaisa');
+    ('Gadgeteens', 'Gnar', 'Annie'),
+    ('Infiniteams', 'Ultimate_Ezreal', 'Garen'),
+    ('Lasercorps_brawlers', 'Warwick', 'Renekton'),
+    ('Ox_force_spellslingers', 'Twisted_Fate', 'Annie'),
+    ('Aegies_quickdraw', 'Kaisa', 'Nilah');
 
 
 INSERT INTO Composition_Augment (composition_name, augment_name, connection)
@@ -270,31 +270,55 @@ VALUES
     ('Warwick', 'Recurve_bow', 60),
     ('Twisted_Fate', 'Recurve_bow', 100),
     ('Kaisa', 'Recurve_bow', 100),
+    ('Annie', 'Recurve_bow', 0),
+    ('Garen', 'Recurve_bow', 0),
+    ('Renekton', 'Recurve_bow', 0),
+    ('Nilah', 'Recurve_bow', 60),
     ('Gnar', 'Chain_vest', 100),
     ('Ultimate_Ezreal', 'Chain_vest', 45),
     ('Warwick', 'Chain_vest', 20),
     ('Twisted_Fate', 'Chain_vest', 50),
     ('Kaisa', 'Chain_vest', 100),
+    ('Annie', 'Chain_vest', 100),
+    ('Garen', 'Chain_vest', 100),
+    ('Renekton', 'Chain_vest', 100),
+    ('Nilah', 'Chain_vest', 60),
     ('Gnar', 'Tear_of_the_Goddess', 0),
     ('Ultimate_Ezreal', 'Tear_of_the_Goddess', 10),
     ('Warwick', 'Tear_of_the_Goddess', 25),
     ('Twisted_Fate', 'Tear_of_the_Goddess', 30),
     ('Kaisa', 'Tear_of_the_Goddess', 0),
+    ('Annie', 'Tear_of_the_Goddess', 35),
+    ('Garen', 'Tear_of_the_Goddess', 50),
+    ('Renekton', 'Tear_of_the_Goddess', 30),
+    ('Nilah', 'Tear_of_the_Goddess', 70),
     ('Gnar', 'Giants_belt', 100),
     ('Ultimate_Ezreal', 'Giants_belt', 30),
     ('Warwick', 'Giants_belt', 60),
     ('Twisted_Fate', 'Giants_belt', 0),
-    ('Kaisa', 'Giants_belt', 80),
+    ('Kaisa', 'Giants_belt', 30),
+    ('Annie', 'Giants_belt', 100),
+    ('Garen', 'Giants_belt', 100),
+    ('Renekton', 'Giants_belt', 100),
+    ('Nilah', 'Giants_belt', 100),
     ('Gnar', 'B_F_Sword', 80),
     ('Ultimate_Ezreal', 'B_F_Sword', 40),
     ('Warwick', 'B_F_Sword', 50),
     ('Twisted_Fate', 'B_F_Sword', 85),
     ('Kaisa', 'B_F_Sword', 90),
+    ('Annie', 'B_F_Sword', 60),
+    ('Garen', 'B_F_Sword', 70),
+    ('Renekton', 'B_F_Sword', 0),
+    ('Nilah', 'B_F_Sword', 0),
     ('Gnar', 'Negatrons_cloak', 70),
     ('Ultimate_Ezreal', 'Negatrons_cloak', 80),
     ('Warwick', 'Negatrons_cloak', 0),
     ('Twisted_Fate', 'Negatrons_cloak', 25),
-    ('Kaisa', 'Negatrons_cloak', 0);
+    ('Kaisa', 'Negatrons_cloak', 0),
+    ('Annie', 'Negatrons_cloak', 100),
+    ('Garen', 'Negatrons_cloak', 100),
+    ('Renekton', 'Negatrons_cloak', 40),
+    ('Nilah', 'Negatrons_cloak', 100);
 
 
 INSERT INTO Composition_Item (composition_name, item_name, connection)

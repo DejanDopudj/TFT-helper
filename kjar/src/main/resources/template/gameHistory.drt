@@ -1,0 +1,29 @@
+template header
+minPlace
+maxPlace
+grade
+
+package template;
+
+import com.ftn.sbnz.model.Game;
+
+template "classification-rules"
+
+rule "Categorize History_@{row.rowNumber}"
+no-loop true
+when
+    $placeSum: Number() from accumulate(
+        Game($place: place),
+        sum($place)
+    )
+    $placeCount: Number() from accumulate(
+        Game($place: place),
+        count($place)
+    )
+    eval($placeSum.doubleValue() / $placeCount.doubleValue() >= @{minPlace})
+    eval($placeSum.doubleValue() / $placeCount.doubleValue() < @{maxPlace})
+then
+    System.out.println("Adequate grade is: @{grade}");
+end
+
+end template

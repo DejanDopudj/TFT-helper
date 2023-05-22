@@ -57,6 +57,9 @@ public class Game {
 
     private int level;
     private int gold;
+
+    private int place;
+
     public void addCompValue(Composition composition, double value){
         compValue.put(composition,value);
     }

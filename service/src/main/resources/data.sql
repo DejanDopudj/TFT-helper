@@ -60,10 +60,10 @@ INSERT INTO Component (name, component_type)
 VALUES
     ('Recurve_bow',0),
     ('Chain_vest',1),
-    ('Tear_of_the_Goddess',1),
-    ('Giants_belt',0),
-    ('B_F_Sword',1),
-    ('Negatrons_cloak',0);
+    ('Tear_of_the_Goddess',0),
+    ('Giants_belt',1),
+    ('B_F_Sword',0),
+    ('Negatrons_cloak',1);
 
 INSERT INTO Item (name)
 VALUES

@@ -5,13 +5,19 @@ import com.ftn.sbnz.model.event.AugmentEvent;
 import com.ftn.sbnz.model.AugmentLocation;
 import com.ftn.sbnz.service.repository.*;
 import com.ftn.sbnz.service.service.RuleService;
+import org.drools.template.ObjectDataCompiler;
 import org.junit.jupiter.api.Test;
 import org.kie.api.KieServices;
+import org.kie.api.builder.Message;
+import org.kie.api.builder.Results;
+import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.InputStream;
 import java.util.*;
 
 import java.util.ArrayList;
@@ -97,6 +103,8 @@ class ServiceApplicationTests {
 	}
 
 
+
+
 	public Game createGame(){
 		List<Augment> augments = augmentRepository.findAll();
 		Game game = new Game();
@@ -111,7 +119,7 @@ class ServiceApplicationTests {
 		game.setItems(new ArrayList<>());
 		game.setComposition(null);
 		game.setCompValue(new HashMap<>());
-		game.setComponents(new ArrayList<>(Arrays.asList(components.get(0),components.get(1),components.get(3))));
+		game.setComponents(new ArrayList<>(Arrays.asList(components.get(0),components.get(1),components.get(2))));
 		for(Composition composition : compositions){
 			game.getCompValue().put(composition, 0.0);
 		}
@@ -120,6 +128,62 @@ class ServiceApplicationTests {
 		game.setLevel(1);
 		game.setGold(0);
 		return game;
+	}
+
+	@Test
+	void generateTemplate() {
+		InputStream template = ServiceApplicationTests.class
+				.getResourceAsStream("/template/gameHistory.drt");
+		List<GameHistoryTemplate> data = new ArrayList<>();
+
+		data.add(new GameHistoryTemplate(1,2, Grade.SP));
+		data.add(new GameHistoryTemplate(2,3, Grade.S));
+		data.add(new GameHistoryTemplate(3,4, Grade.A));
+		data.add(new GameHistoryTemplate(4,5, Grade.B));
+		data.add(new GameHistoryTemplate(5,6, Grade.C));
+		data.add(new GameHistoryTemplate(6,7, Grade.D));
+		data.add(new GameHistoryTemplate(7,8, Grade.E));
+		data.add(new GameHistoryTemplate(8,9, Grade.F));
+
+
+		ObjectDataCompiler converter = new ObjectDataCompiler();
+		String drl = converter.compile(data, template);
+
+		System.out.println(drl);
+
+		KieSession ksession = createKieSessionFromDRL(drl);
+
+		doTest(ksession);
+	}
+
+	private KieSession createKieSessionFromDRL(String drl){
+		KieHelper kieHelper = new KieHelper();
+		kieHelper.addContent(drl, ResourceType.DRL);
+
+		Results results = kieHelper.verify();
+
+		if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
+			List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
+			for (Message message : messages) {
+				System.out.println("Error: "+message.getText());
+			}
+
+			throw new IllegalStateException("Compilation errors were found. Check the logs.");
+		}
+
+		return kieHelper.build().newKieSession();
+	}
+
+	private void doTest(KieSession ksession){
+		Game game = new Game();
+		game.setPlace(1);
+		Game game2 = new Game();
+		game2.setPlace(4);
+
+		ksession.insert(game);
+		ksession.insert(game2);
+		long ruleFireCount = ksession.fireAllRules();
+		System.out.println(ruleFireCount);
 	}
 
 }

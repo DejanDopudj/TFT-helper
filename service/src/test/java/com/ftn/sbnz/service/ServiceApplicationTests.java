@@ -119,7 +119,7 @@ class ServiceApplicationTests {
 		game.setItems(new ArrayList<>());
 		game.setComposition(null);
 		game.setCompValue(new HashMap<>());
-		game.setComponents(new ArrayList<>(Arrays.asList(components.get(0),components.get(1),components.get(3))));
+		game.setComponents(new ArrayList<>(Arrays.asList(components.get(0),components.get(1),components.get(2))));
 		for(Composition composition : compositions){
 			game.getCompValue().put(composition, 0.0);
 		}

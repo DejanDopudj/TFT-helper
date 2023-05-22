@@ -139,7 +139,7 @@ then
     };
 end
 
-rule "ChampionsForComposition"
+rule "OffensiveChampionsForComposition"
 no-loop
 when
     $currentGame: Game(username == "test", phase == 5, $components: components)
@@ -151,20 +151,37 @@ when
         Component($compType: componentType) from $components,
         sum($compType.ordinal())
     )
+    eval($itemCount.doubleValue()/2 > $defensiveItemCount.doubleValue())
 then
-    String carry;
-    if($itemCount.doubleValue()/2 > $defensiveItemCount.doubleValue()){
-        carry = $currentGame.getComposition().getOffCarry();
-    }
-    else{
-        carry = $currentGame.getComposition().getDefCarry();
-    }
+    String carry = $currentGame.getComposition().getOffCarry();
     insert(new Carry(carry, $currentGame.getId(), $currentGame.getUsername(), false));
     System.out.println("Carry is = " + carry);
     modify($currentGame) {
         setPhase($currentGame.getPhase() + 1)
     };
 end
+
+rule "DefensiveChampionsForComposition"
+   no-loop
+   when
+       $currentGame: Game(username == "test", phase == 5, $components: components)
+       $itemCount: Number() from accumulate(
+           Component($compType: componentType) from $components,
+           count($compType)
+       )
+       $defensiveItemCount: Number() from accumulate(
+           Component($compType: componentType) from $components,
+           sum($compType.ordinal())
+       )
+        eval($itemCount.doubleValue()/2 <= $defensiveItemCount.doubleValue())
+   then
+       String carry = $currentGame.getComposition().getDefCarry();
+       insert(new Carry(carry, $currentGame.getId(), $currentGame.getUsername(), false));
+       System.out.println("Carry is = " + carry);
+       modify($currentGame) {
+           setPhase($currentGame.getPhase() + 1)
+       };
+   end
 
 rule "GenerateCarry"
 no-loop

@@ -8,13 +8,19 @@ export default {
     extend: {
       colors: {
         "dark": "#13181B",
-        "medium": "#2F4858",
+        "dork": "#2F4858",
+        "medium": "#8199a0",
         "light": "#FDFFFC",
         "primary": "#ffcf36",
         "secondary": "#00A8BF",
       },
       spacing: {
         "76": "19rem",
+        "88": "22rem",
+        "100": "25rem",
+        "108": "27rem",
+        "120": "30rem",
+        "160": "40rem",
       }
     },
   },

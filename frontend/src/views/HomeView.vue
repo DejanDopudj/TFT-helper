@@ -1,9 +1,9 @@
 <script setup>
-import Hello from '../components/Hello.vue'
+import Home from '../components/Home.vue'
 </script>
 
 <template>
-  <main>
-    <Hello />
+  <main class="h-full">
+    <Home />
   </main>
 </template>

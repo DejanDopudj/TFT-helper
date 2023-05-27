@@ -10,7 +10,7 @@ watch(() => route.name, () => {
   isLoginPage.value = route.name === 'login'
 })
     
-const isLoggedIn = isUserLoggedIn()
+const isLoggedIn = ref(isUserLoggedIn())
 
 watch(() => isUserLoggedIn(), () => {
   isLoggedIn = isUserLoggedIn()

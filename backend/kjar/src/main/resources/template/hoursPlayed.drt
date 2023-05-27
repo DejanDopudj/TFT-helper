@@ -1,0 +1,25 @@
+template header
+minGames
+maxGames
+hoursPlayed
+
+package template;
+
+import com.ftn.sbnz.model.Game;
+
+template "classification-rules"
+
+rule "Categorize Hours Played_@{row.rowNumber}"
+no-loop true
+when
+    $placeSum: Number() from accumulate(
+        Game($place: place),
+        count($place)
+    )
+    eval($placeSum.doubleValue() >= @{minGames})
+    eval($placeSum.doubleValue() < @{maxGames})
+then
+    System.out.println("Hours played is: @{hoursPlayed}");
+end
+
+end template

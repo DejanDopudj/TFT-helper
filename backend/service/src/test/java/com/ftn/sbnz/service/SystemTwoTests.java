@@ -203,4 +203,29 @@ public class SystemTwoTests {
 
         return kieHelper.build().newKieSession();
     }
+
+    @Test
+    void generateTemplate2() {
+        InputStream template = ServiceApplicationTests.class
+                .getResourceAsStream("/template/hoursPlayed.drt");
+        List<HoursPlayedTemplate> data = new ArrayList<>();
+
+        data.add(new HoursPlayedTemplate(0,5, "~3"));
+        data.add(new HoursPlayedTemplate(6,10, "~5"));
+        data.add(new HoursPlayedTemplate(11,20, "~10"));
+        data.add(new HoursPlayedTemplate(20,50, "~25"));
+        data.add(new HoursPlayedTemplate(50,100, "~50"));
+        
+        ObjectDataCompiler converter = new ObjectDataCompiler();
+        String drl = converter.compile(data, template);
+
+        System.out.println(drl);
+
+        KieSession ksession = createKieSessionFromDRL(drl);
+
+        Game game = new Game();
+        ksession.insert(game);
+        long ruleFireCount = ksession.fireAllRules();
+        System.out.println(ruleFireCount);
+    }
 }

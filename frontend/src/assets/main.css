@@ -12,17 +12,17 @@
 /* Track */
 ::-webkit-scrollbar-track {
   --tw-bg-opacity: 1;
-  background-color: rgba(61, 60, 65, var(--tw-bg-opacity));
+  background-color: #2F4858;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #8199a0;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #666; 
+  background: #618990; 
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

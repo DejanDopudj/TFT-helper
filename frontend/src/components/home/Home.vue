@@ -3,14 +3,12 @@
     <div class="text-5xl font-medium text-primary">
       TFT Helper
     </div>
-    <div class="text-secondary font-bold">
+    <div class="text-secondary font-bold mt-1">
       Your Teamfight Tactics coordinator
     </div>
-    <div class="flex justify-center gap-x-6 mt-4">
+    <div class="flex justify-center gap-x-6 mt-6">
       <button class="w-32 text-light font-medium border border-light
       hover:opacity-80 rounded-md py-2">Get Started</button>
-      <button class="w-32 text-light font-medium border border-light
-      hover:opacity-80 rounded-md py-2">Log In</button>
     </div>
   </div>
 </template>

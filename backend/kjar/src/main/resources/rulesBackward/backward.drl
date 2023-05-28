@@ -2,6 +2,7 @@ package rulesBackward;
 
 import com.ftn.sbnz.model.AugmentLocation;
 import com.ftn.sbnz.model.Augment;
+import com.ftn.sbnz.model.Result;
 
 query isAncestor( String x, String y )
     AugmentLocation( x, y; )
@@ -19,8 +20,11 @@ when
     $aug1: Augment()
     $aug2: Augment(name != $aug1.name)
     isAncestor($aug1.name, $aug2.name; )
+    $result: Result()
 then
-    System.out.println("They are connected, parent is=" + $aug2.getName() + ", child name is=" + $aug1.getName());
+    modify($result) {
+        setValue("They are connected, parent is=" + $aug2.getName() + ", child name is=" + $aug1.getName());
+    }
 end
 
 rule "siblings"
@@ -29,6 +33,9 @@ when
     $aug1: Augment()
     $aug2: Augment(name != $aug1.name)
     areSiblings($aug1.name, $aug2.name; )
+    $result: Result()
 then
-    System.out.println("They are connected, sibling one is=" + $aug2.getName() + ", sibling two is=" + $aug1.getName());
+    modify($result) {
+        setValue("They are connected, sibling one is=" + $aug2.getName() + ", sibling two is=" + $aug1.getName());
+    }
 end

@@ -9,6 +9,7 @@ import org.apache.tools.ant.taskdefs.PathConvert;
 import org.springframework.data.util.Pair;
 import  java.util.AbstractMap.SimpleEntry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class Game {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Augment> augments;
     @Transient
-    private List<SimpleEntry<Augment, Double>> augmentChoice;
+    private List<SimpleEntry<Augment, Double>> augmentChoice = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Composition composition;
@@ -60,11 +61,18 @@ public class Game {
 
     private int place;
 
+    public void addComponent(Component component){
+        this.components.add(component);
+    }
+
     public void addCompValue(Composition composition, double value){
         compValue.put(composition,value);
     }
     public void addAugment(Augment augment){
         augments.add(augment);
+    }
+    public void addAugmentChoice(Augment augment){
+        augmentChoice.add(new SimpleEntry<>(augment, 0.0));
     }
     public void addAugmentChoiceValue(Augment augment, Double value) {
         if(augmentChoice.get(0).getKey().getName().equals(augment.getName())){

@@ -153,6 +153,8 @@ class ServiceApplicationTests {
 
 		KieSession ksession = createKieSessionFromDRL(drl);
 
+		ksession.setGlobal("username", "test");
+
 		doTest(ksession);
 	}
 
@@ -177,8 +179,10 @@ class ServiceApplicationTests {
 	private void doTest(KieSession ksession){
 		Game game = new Game();
 		game.setPlace(1);
+		game.setUsername("test");
 		Game game2 = new Game();
 		game2.setPlace(4);
+		game.setUsername("test2");
 
 		ksession.insert(game);
 		ksession.insert(game2);

@@ -466,3 +466,8 @@ VALUES
     ('Miss_fortune', 'Aegies_quickdraw'),
     ('Garen', 'Aegies_quickdraw'),
     ('Ekko', 'Aegies_quickdraw');
+
+
+insert into Game(id, level, round, hp, gold, place, username)
+values
+    (1, 3, 0, 100, 0, 1, 'test')

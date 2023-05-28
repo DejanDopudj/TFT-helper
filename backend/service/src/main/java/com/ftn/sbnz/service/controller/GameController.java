@@ -1,9 +1,9 @@
 package com.ftn.sbnz.service.controller;
 
-import com.ftn.sbnz.service.dto.JwtAuthenticationRequestDTO;
+import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
+import com.ftn.sbnz.service.dto.game.GameComponentDto;
 import com.ftn.sbnz.service.dto.game.IdDto;
 import com.ftn.sbnz.service.dto.game.IdValueDto;
-import com.ftn.sbnz.service.security.UserTokenState;
 import com.ftn.sbnz.service.service.GameService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,12 @@ public class GameController {
     public ResponseEntity<Boolean> increaseLevel(@Valid @RequestBody IdDto idDto) {
         return ResponseEntity.ok(gameService.increaseLevel(idDto.getId()));
     }
+
     @PostMapping("/decrease-level")
     public ResponseEntity<Boolean> decreaseLevel(@Valid @RequestBody IdDto idDto) {
         return ResponseEntity.ok(gameService.decreaseLevel(idDto.getId()));
     }
+
     @PostMapping("/set-gold")
     public ResponseEntity<Boolean> setGold(@Valid @RequestBody IdValueDto idValueDto) {
         return ResponseEntity.ok(gameService.setGold(idValueDto.getId(),idValueDto.getValue()));
@@ -45,6 +47,14 @@ public class GameController {
     }
 
 
+    @PostMapping("/add-component")
+    public ResponseEntity<Boolean> addComponent(@Valid @RequestBody GameComponentDto gameComponentDto) {
+        return ResponseEntity.ok(gameService.addComponent(gameComponentDto.getId(),gameComponentDto.getComponentName()));
+    }
+    @PostMapping("/add-augments")
+    public ResponseEntity<Boolean> addAugments(@Valid @RequestBody GameAugmentsDto gameAugmentsDto) {
+        return ResponseEntity.ok(gameService.addAugments(gameAugmentsDto));
+    }
 
 
 }

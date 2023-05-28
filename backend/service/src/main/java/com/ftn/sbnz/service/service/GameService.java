@@ -35,6 +35,8 @@ public class GameService {
     private ChampionLocationRepository championLocationRepository;
     @Autowired
     private AugmentLocationRepository augmentLocationRepository;
+    @Autowired
+    private KSessionService kSessionService;
     public boolean increaseLevel(Long id){
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
@@ -157,83 +159,19 @@ public class GameService {
     }
 
     public String getHistoryGrade(String username) {
-        InputStream template = GameService.class
-                .getResourceAsStream("/template/gameHistory.drt");
-        List<GameHistoryTemplate> data = new ArrayList<>();
-
-        data.add(new GameHistoryTemplate(1,2, Grade.SP));
-        data.add(new GameHistoryTemplate(2,3, Grade.S));
-        data.add(new GameHistoryTemplate(3,4, Grade.A));
-        data.add(new GameHistoryTemplate(4,5, Grade.B));
-        data.add(new GameHistoryTemplate(5,6, Grade.C));
-        data.add(new GameHistoryTemplate(6,7, Grade.D));
-        data.add(new GameHistoryTemplate(7,8, Grade.E));
-        data.add(new GameHistoryTemplate(8,9, Grade.F));
-
-
-        ObjectDataCompiler converter = new ObjectDataCompiler();
-        String drl = converter.compile(data, template);
-
-        System.out.println(drl);
-
-        KieSession ksession = createKieSessionFromDRL(drl);
-
-        List<Game> games = gameRepository.findAll();
-
-        for(Game game : games){
-            ksession.insert(game);
-        }
-        ksession.setGlobal("username", username);
-        long ruleFireCount = ksession.fireAllRules();
+        kSessionService.getKsessionHistoryGrade().setGlobal("username", username);
+        long ruleFireCount = kSessionService.getKsessionHistoryGrade().fireAllRules();
         System.out.println(ruleFireCount);
         return "true";
     }
 
     public String getHoursPlayed(String username) {
-        InputStream template = GameRepository.class
-            .getResourceAsStream("/template/hoursPlayed.drt");
-        List<HoursPlayedTemplate> data = new ArrayList<>();
-
-        data.add(new HoursPlayedTemplate(0,5, "~3"));
-        data.add(new HoursPlayedTemplate(6,10, "~5"));
-        data.add(new HoursPlayedTemplate(11,20, "~10"));
-        data.add(new HoursPlayedTemplate(20,50, "~25"));
-        data.add(new HoursPlayedTemplate(50,100, "~50"));
-
-        ObjectDataCompiler converter = new ObjectDataCompiler();
-        String drl = converter.compile(data, template);
-
-        System.out.println(drl);
-
-        KieSession ksession = createKieSessionFromDRL(drl);
-
-        List<Game> games = gameRepository.findAll();
-
-        for(Game game : games){
-            ksession.insert(game);
-        }
-        ksession.setGlobal("username", username);
-        long ruleFireCount = ksession.fireAllRules();
+        kSessionService.getkSessionHoursPlayed().setGlobal("username", username);
+        long ruleFireCount = kSessionService.getkSessionHoursPlayed().fireAllRules();
         System.out.println(ruleFireCount);
         return "A";
     }
 
 
-    private KieSession createKieSessionFromDRL(String drl){
-        KieHelper kieHelper = new KieHelper();
-        kieHelper.addContent(drl, ResourceType.DRL);
 
-        Results results = kieHelper.verify();
-
-        if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
-            List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
-            for (Message message : messages) {
-                System.out.println("Error: "+message.getText());
-            }
-
-            throw new IllegalStateException("Compilation errors were found. Check the logs.");
-        }
-
-        return kieHelper.build().newKieSession();
-    }
 }

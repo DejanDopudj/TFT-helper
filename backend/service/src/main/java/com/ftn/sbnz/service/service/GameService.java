@@ -5,11 +5,13 @@ import com.ftn.sbnz.service.dto.game.AugmentConnectionDto;
 import com.ftn.sbnz.service.dto.game.ChampionConnectionDto;
 import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
 import com.ftn.sbnz.service.repository.*;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class GameService {
@@ -25,6 +27,8 @@ public class GameService {
     private ChampionLocationRepository championLocationRepository;
     @Autowired
     private AugmentLocationRepository augmentLocationRepository;
+    @Autowired
+    private CompositionRepository compositionRepository;
     @Autowired
     private KSessionService kSessionService;
     public boolean increaseLevel(Long id){
@@ -112,6 +116,15 @@ public class GameService {
             );
             gameRepository.save(optGame.get());
         }
+        KieSession ksession = kSessionService.getCompositionSession("test");
+        optGame.get().setPhase(0);
+        ksession.insert(optGame.get());
+        List<Composition> compositions = compositionRepository.findAll();
+        for(Composition composition : compositions){
+            optGame.get().getCompValue().put(composition, 0.0);
+        }
+        ksession.fireAllRules();
+        ksession.delete(ksession.getFactHandle(optGame.get()));
         return false;
     }
 

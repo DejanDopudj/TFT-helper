@@ -19,8 +19,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Scope("singleton")
@@ -35,11 +34,31 @@ public class KSessionService {
 
     @Autowired
     private AugmentLocationRepository augmentLocationRepository;
+    @Autowired
+    private RuleService ruleService;
 
     private KieSession ksessionHistoryGrade;
     private KieSession kSessionHoursPlayed;
     private KieSession augmentConnection;
     private KieSession championConnection;
+    private Map<String, KieSession> mapCompositionSession = new HashMap<>();
+
+    public KieSession getCompositionSession(String username){
+        if(!mapCompositionSession.containsKey(username)){
+            createCompositionSession(username);
+        }
+        return mapCompositionSession.get(username);
+    }
+
+    private void createCompositionSession(String username) {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession ksession = kc.newKieSession("rulesKsession");
+        List<Double> list = new ArrayList<>(Arrays.asList(1.0, 1.1, 1.2, 1.5));
+        ksession.setGlobal("ruleService", ruleService);
+        ksession.setGlobal("augmentEventConection", list);
+        mapCompositionSession.put(username, ksession);
+    }
 
     public KieSession getKsessionHistoryGrade(){
         if(ksessionHistoryGrade == null){

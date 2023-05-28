@@ -31,6 +31,7 @@ public class GameService {
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
             optGame.get().setLevel(optGame.get().getLevel() + 1);
+            optGame.get().getPlayer().setLevel(optGame.get().getPlayer().getLevel() + 1);
             gameRepository.save(optGame.get());
             return true;
         }
@@ -40,6 +41,7 @@ public class GameService {
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
             optGame.get().setLevel(optGame.get().getLevel() - 1);
+            optGame.get().getPlayer().setLevel(optGame.get().getPlayer().getLevel() - 1);
             gameRepository.save(optGame.get());
             return true;
         }
@@ -50,6 +52,7 @@ public class GameService {
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
             optGame.get().setGold(gold);
+            optGame.get().getPlayer().setGold(gold);
             gameRepository.save(optGame.get());
             return true;
         }
@@ -69,6 +72,7 @@ public class GameService {
         if(optGame.isPresent()){
             optGame.get().setHp(hp);
             gameRepository.save(optGame.get());
+            optGame.get().getPlayer().setHp(hp);
             return true;
         }
         return false;

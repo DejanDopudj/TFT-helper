@@ -114,7 +114,6 @@ public class GameService {
                         optGame.get().addAugmentChoice(augment);
                     }
             );
-            gameRepository.save(optGame.get());
         }
         KieSession ksession = kSessionService.getCompositionSession("test");
         optGame.get().setPhase(0);
@@ -125,6 +124,7 @@ public class GameService {
         }
         ksession.fireAllRules();
         ksession.delete(ksession.getFactHandle(optGame.get()));
+        gameRepository.save(optGame.get());
         return false;
     }
 

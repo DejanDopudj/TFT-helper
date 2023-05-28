@@ -181,6 +181,9 @@ rule "DefensiveChampionsForComposition"
        modify($currentGame) {
            setPhase($currentGame.getPhase() + 1)
        };
+        modify($currentGame) {
+            setCarry(carry)
+        };
    end
 
 rule "GenerateCarry"

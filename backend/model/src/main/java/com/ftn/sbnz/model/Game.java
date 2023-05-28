@@ -62,6 +62,8 @@ public class Game {
 
     private int place;
 
+    private String carry;
+
     public void addComponent(Component component){
         this.components.add(component);
     }

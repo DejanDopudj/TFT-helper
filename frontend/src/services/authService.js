@@ -29,3 +29,16 @@ export async function login(username, password, successCallback, errorCallback) 
     errorCallback()
   })
 }
+
+export async function register(email, username, password, successCallback, errorCallback) {
+  axiosInstance().post('/api/auth/register', { email, username, password })
+  .then(res => {
+    console.log(res)
+    successCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    if (err.response?.data?.message) errorCallback(err.response.data.message)
+    else errorCallback(null)
+  })
+}

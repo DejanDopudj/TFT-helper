@@ -1,15 +1,17 @@
 package com.ftn.sbnz.service.service;
 
-import com.ftn.sbnz.model.Augment;
-import com.ftn.sbnz.model.Component;
-import com.ftn.sbnz.model.Game;
+import com.ftn.sbnz.model.*;
+import com.ftn.sbnz.service.dto.game.AugmentConnectionDto;
+import com.ftn.sbnz.service.dto.game.ChampionConnectionDto;
 import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
-import com.ftn.sbnz.service.repository.AugmentRepository;
-import com.ftn.sbnz.service.repository.ComponentRepository;
-import com.ftn.sbnz.service.repository.GameRepository;
+import com.ftn.sbnz.service.repository.*;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +22,12 @@ public class GameService {
     private ComponentRepository componentRepository;
     @Autowired
     private AugmentRepository augmentRepository;
+    @Autowired
+    private ChampionRepository championRepository;
+    @Autowired
+    private ChampionLocationRepository championLocationRepository;
+    @Autowired
+    private AugmentLocationRepository augmentLocationRepository;
     public boolean increaseLevel(Long id){
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
@@ -102,6 +110,42 @@ public class GameService {
             gameRepository.save(optGame.get());
         }
         return false;
+    }
 
+
+    public String getAugmentConnection(AugmentConnectionDto augmentConnectionDto) {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession ksession = kc.newKieSession("backwardKsession");
+        Augment augment1 = augmentRepository.findById(augmentConnectionDto.getAugment1()).get();
+        Augment augment2 = augmentRepository.findById(augmentConnectionDto.getAugment2()).get();
+        ksession.insert(augment1);
+        ksession.insert(augment2);
+        List<AugmentLocation> augmentLocations = augmentLocationRepository.findAll();
+        for(AugmentLocation augmentLocation : augmentLocations){
+            ksession.insert(augmentLocation);
+        }
+        ksession.getAgenda().getAgendaGroup("areConnectedGroup").setFocus();
+        long ruleFireCount = ksession.fireAllRules();
+        System.out.println(ruleFireCount);
+        return "true";
+    }
+
+    public String getChampionConnection(ChampionConnectionDto championConnectionDto) {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession ksession = kc.newKieSession("backwardKsession2");
+        Champion champion1 = championRepository.findById(championConnectionDto.getChampion1()).get();
+        Champion champion2 = championRepository.findById(championConnectionDto.getChampion2()).get();
+        ksession.insert(champion1);
+        ksession.insert(champion2);
+        List<ChampionLocation> championLocations = championLocationRepository.findAll();
+        for(ChampionLocation championLocation : championLocations){
+            ksession.insert(championLocation);
+        }
+        ksession.getAgenda().getAgendaGroup("areConnectedGroup2").setFocus();
+        long ruleFireCount = ksession.fireAllRules();
+        System.out.println(ruleFireCount);
+        return "true";
     }
 }

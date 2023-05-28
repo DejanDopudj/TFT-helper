@@ -1,9 +1,7 @@
 package com.ftn.sbnz.service.controller;
 
-import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
-import com.ftn.sbnz.service.dto.game.GameComponentDto;
-import com.ftn.sbnz.service.dto.game.IdDto;
-import com.ftn.sbnz.service.dto.game.IdValueDto;
+import com.ftn.sbnz.model.Augment;
+import com.ftn.sbnz.service.dto.game.*;
 import com.ftn.sbnz.service.service.GameService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +53,19 @@ public class GameController {
     public ResponseEntity<Boolean> addAugments(@Valid @RequestBody GameAugmentsDto gameAugmentsDto) {
         return ResponseEntity.ok(gameService.addAugments(gameAugmentsDto));
     }
+
+
+    @PostMapping("/get-augment-connection")
+    public String getAugmentConnection(@Valid @RequestBody AugmentConnectionDto augmentConnectionDto) {
+        return gameService.getAugmentConnection(augmentConnectionDto);
+    }
+
+    @PostMapping("/get-champion-connection")
+    public String getChampionConnection(@Valid @RequestBody ChampionConnectionDto championConnectionDto) {
+        return gameService.getChampionConnection(championConnectionDto);
+    }
+
+
 
 
 }

@@ -1,9 +1,12 @@
 package com.ftn.sbnz.service.service;
 
 import com.ftn.sbnz.model.*;
+import com.ftn.sbnz.model.event.AugmentEvent;
+import com.ftn.sbnz.model.event.RoundResultEvent;
 import com.ftn.sbnz.service.dto.game.AugmentConnectionDto;
 import com.ftn.sbnz.service.dto.game.ChampionConnectionDto;
 import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
+import com.ftn.sbnz.service.dto.game.SelectedAugmentDto;
 import com.ftn.sbnz.service.repository.*;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -129,6 +132,21 @@ public class GameService {
     }
 
 
+    public Boolean addSelectedAugment(SelectedAugmentDto selectedAugmentDto) {
+        Optional<Game> optGame = gameRepository.findById(selectedAugmentDto.getId());
+        KieSession ksession = kSessionService.getCompositionSession("test");
+        if(optGame.isPresent()){
+            Calendar calendar = Calendar.getInstance();
+            AugmentEvent augmentEvent = new AugmentEvent();
+            augmentEvent.setName(selectedAugmentDto.getAugment());
+            augmentEvent.setExecutionTime(calendar.getTime());
+            ksession.insert(augmentEvent);
+            return true;
+        }
+        return false;
+    }
+
+
     public String getAugmentConnection(AugmentConnectionDto augmentConnectionDto) {
         KieSession ksession = kSessionService.getKSessionAugmentConnection();
         Augment augment1 = augmentRepository.findById(augmentConnectionDto.getAugment1()).get();
@@ -185,5 +203,18 @@ public class GameService {
     }
 
 
-
+    public String addRoundResult(String type) {
+        KieSession ksession = kSessionService.getPositionSession("test");
+        RoundResult roundResult = RoundResult.LOSS;
+        if (type.equals("WIN")){
+            roundResult = RoundResult.WIN;
+        }
+        Calendar calendar = Calendar.getInstance();
+        RoundResultEvent roundResultEvent = new RoundResultEvent();
+        roundResultEvent.setResult(roundResult);
+        roundResultEvent.setTimestamp(calendar.getTime());
+        ksession.insert(new RoundResultEvent(RoundResult.WIN));
+        ksession.fireAllRules();
+        return "true";
+    }
 }

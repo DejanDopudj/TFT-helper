@@ -54,6 +54,11 @@ public class GameController {
         return ResponseEntity.ok(gameService.addAugments(gameAugmentsDto));
     }
 
+    @PostMapping("/add-selected-augment")
+    public ResponseEntity<Boolean> addSelectedAugment(@Valid @RequestBody SelectedAugmentDto selectedAugmentDto) {
+        return ResponseEntity.ok(gameService.addSelectedAugment(selectedAugmentDto));
+    }
+
 
     @PostMapping("/get-augment-connection")
     public String getAugmentConnection(@Valid @RequestBody AugmentConnectionDto augmentConnectionDto) {
@@ -74,6 +79,13 @@ public class GameController {
     @PostMapping("/get-hours-played")
     public String getHoursPlayed(@Valid @RequestBody String username) {
         return gameService.getHoursPlayed(username);
+    }
+
+
+
+    @PostMapping("/round-result")
+    public String addRoundResult(@Valid @RequestBody String type) {
+        return gameService.addRoundResult(type);
     }
 
 }

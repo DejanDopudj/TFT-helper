@@ -42,6 +42,7 @@ public class KSessionService {
     private KieSession augmentConnection;
     private KieSession championConnection;
     private Map<String, KieSession> mapCompositionSession = new HashMap<>();
+    private Map<String, KieSession> mapPositionSession = new HashMap<>();
 
     public KieSession getCompositionSession(String username){
         if(!mapCompositionSession.containsKey(username)){
@@ -58,6 +59,22 @@ public class KSessionService {
         ksession.setGlobal("ruleService", ruleService);
         ksession.setGlobal("augmentEventConection", list);
         mapCompositionSession.put(username, ksession);
+    }
+
+
+
+    public KieSession getPositionSession(String username){
+        if(!mapPositionSession.containsKey(username)){
+            createPositionSession(username);
+        }
+        return mapPositionSession.get(username);
+    }
+
+    private void createPositionSession(String username) {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession ksession = kc.newKieSession("cepKsession");
+        mapPositionSession.put(username, ksession);
     }
 
     public KieSession getKsessionHistoryGrade(){

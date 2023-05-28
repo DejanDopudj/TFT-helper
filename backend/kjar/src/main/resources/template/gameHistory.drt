@@ -6,6 +6,7 @@ grade
 package template;
 
 import com.ftn.sbnz.model.Game;
+import com.ftn.sbnz.model.Result;
 
 global String username;
 
@@ -24,8 +25,11 @@ when
     )
     eval($placeSum.doubleValue() / $placeCount.doubleValue() >= @{minPlace})
     eval($placeSum.doubleValue() / $placeCount.doubleValue() < @{maxPlace})
+    $result: Result()
 then
-    System.out.println("Adequate grade is: @{grade}");
+    modify($result) {
+        setValue("Adequate grade is: @{grade}");
+    }
 end
 
 end template

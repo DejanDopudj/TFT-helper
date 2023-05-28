@@ -116,42 +116,55 @@ public class GameService {
         KieSession ksession = kSessionService.getKSessionAugmentConnection();
         Augment augment1 = augmentRepository.findById(augmentConnectionDto.getAugment1()).get();
         Augment augment2 = augmentRepository.findById(augmentConnectionDto.getAugment2()).get();
+        Result result = new Result();
         ksession.insert(augment1);
         ksession.insert(augment2);
+        ksession.insert(result);
         ksession.getAgenda().getAgendaGroup("areConnectedGroup").setFocus();
         long ruleFireCount = ksession.fireAllRules();
+        String retValue = result.getValue();
         ksession.delete(ksession.getFactHandle(augment1));
         ksession.delete(ksession.getFactHandle(augment2));
         System.out.println(ruleFireCount);
-        return "true";
+        return retValue;
     }
 
     public String getChampionConnection(ChampionConnectionDto championConnectionDto) {
         KieSession ksession = kSessionService.getkSessionChampionConnection();
         Champion champion1 = championRepository.findById(championConnectionDto.getChampion1()).get();
         Champion champion2 = championRepository.findById(championConnectionDto.getChampion2()).get();
+        Result result = new Result();
         ksession.insert(champion1);
         ksession.insert(champion2);
+        ksession.insert(result);
         ksession.getAgenda().getAgendaGroup("areConnectedGroup2").setFocus();
         long ruleFireCount = ksession.fireAllRules();
+        String retValue = result.getValue();
         ksession.delete(ksession.getFactHandle(champion1));
         ksession.delete(ksession.getFactHandle(champion2));
+        ksession.delete(ksession.getFactHandle(result));
         System.out.println(ruleFireCount);
-        return "true";
+        return retValue;
     }
 
     public String getHistoryGrade(String username) {
         kSessionService.getKsessionHistoryGrade().setGlobal("username", username);
+        Result result = new Result();
+        kSessionService.getKsessionHistoryGrade().insert(result);
         long ruleFireCount = kSessionService.getKsessionHistoryGrade().fireAllRules();
         System.out.println(ruleFireCount);
-        return "true";
+        String retValue = result.getValue();
+        return retValue;
     }
 
     public String getHoursPlayed(String username) {
         kSessionService.getKSessionHoursPlayed().setGlobal("username", username);
+        Result result = new Result();
+        kSessionService.getKSessionHoursPlayed().insert(result);
         long ruleFireCount = kSessionService.getKSessionHoursPlayed().fireAllRules();
         System.out.println(ruleFireCount);
-        return "A";
+        String retValue = result.getValue();
+        return retValue;
     }
 
 

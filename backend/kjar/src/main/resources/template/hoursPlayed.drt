@@ -6,6 +6,7 @@ hoursPlayed
 package template;
 
 import com.ftn.sbnz.model.Game;
+import com.ftn.sbnz.model.Result;
 
 global String username;
 
@@ -20,8 +21,11 @@ when
     )
     eval($placeSum.doubleValue() >= @{minGames})
     eval($placeSum.doubleValue() < @{maxGames})
+    $result: Result()
 then
-    System.out.println("Hours played is: @{hoursPlayed}");
+    modify($result) {
+        setValue("Hours played is: @{hoursPlayed}");
+    }
 end
 
 end template

@@ -66,6 +66,14 @@ public class GameController {
     }
 
 
+    @PostMapping("/get-history-grade")
+    public String getHistoryGrade(@Valid @RequestBody String username) {
+        return gameService.getHistoryGrade(username);
+    }
 
+    @PostMapping("/get-hours-played")
+    public String getHoursPlayed(@Valid @RequestBody String username) {
+        return gameService.getHoursPlayed(username);
+    }
 
 }

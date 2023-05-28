@@ -468,6 +468,6 @@ VALUES
     ('Ekko', 'Aegies_quickdraw');
 
 
-insert into Game(id, level, round, hp, gold, place)
+insert into Game(id, level, round, hp, gold, place, username)
 values
-    (1, 3, 0, 100, 0, 0)
+    (1, 3, 0, 100, 0, 1, 'test')

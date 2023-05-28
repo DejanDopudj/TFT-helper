@@ -7,13 +7,15 @@ package template;
 
 import com.ftn.sbnz.model.Game;
 
+global String username;
+
 template "classification-rules"
 
 rule "Categorize History_@{row.rowNumber}"
 no-loop true
 when
     $placeSum: Number() from accumulate(
-        Game($place: place),
+        Game($place: place, $username : username == username),
         sum($place)
     )
     $placeCount: Number() from accumulate(

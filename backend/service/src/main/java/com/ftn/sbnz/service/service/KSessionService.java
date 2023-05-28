@@ -1,17 +1,17 @@
 package com.ftn.sbnz.service.service;
 
-import com.ftn.sbnz.model.Game;
-import com.ftn.sbnz.model.GameHistoryTemplate;
-import com.ftn.sbnz.model.Grade;
-import com.ftn.sbnz.model.HoursPlayedTemplate;
+import com.ftn.sbnz.model.*;
+import com.ftn.sbnz.service.repository.AugmentLocationRepository;
+import com.ftn.sbnz.service.repository.ChampionLocationRepository;
 import com.ftn.sbnz.service.repository.GameRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.drools.template.ObjectDataCompiler;
+import org.kie.api.KieServices;
 import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
-import org.kie.api.cdi.KSession;
 import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,16 @@ public class KSessionService {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    private ChampionLocationRepository championLocationRepository;
+
+    @Autowired
+    private AugmentLocationRepository augmentLocationRepository;
+
     private KieSession ksessionHistoryGrade;
     private KieSession kSessionHoursPlayed;
+    private KieSession augmentConnection;
+    private KieSession championConnection;
 
     public KieSession getKsessionHistoryGrade(){
         if(ksessionHistoryGrade == null){
@@ -39,12 +47,46 @@ public class KSessionService {
         }
         return ksessionHistoryGrade;
     }
-    public KieSession getkSessionHoursPlayed(){
+    public KieSession getKSessionHoursPlayed(){
         if(kSessionHoursPlayed == null){
             createHoursPlayed();
         }
         return kSessionHoursPlayed;
     }
+    public KieSession getKSessionAugmentConnection(){
+        if(augmentConnection == null){
+            createAugmentConnection();
+        }
+        return augmentConnection;
+    }
+
+    private void createAugmentConnection() {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        augmentConnection = kc.newKieSession("backwardKsession");
+        List<AugmentLocation> augmentLocations = augmentLocationRepository.findAll();
+        for(AugmentLocation augmentLocation : augmentLocations){
+            augmentConnection.insert(augmentLocation);
+        }
+    }
+
+    public KieSession getkSessionChampionConnection(){
+        if(championConnection == null){
+            createChampionConnection();
+        }
+        return championConnection;
+    }
+
+    private void createChampionConnection() {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        championConnection = kc.newKieSession("backwardKsession2");
+        List<ChampionLocation> championLocations = championLocationRepository.findAll();
+        for(ChampionLocation championLocation : championLocations){
+            championConnection.insert(championLocation);
+        }
+    }
+
 
     private void createHoursPlayed(){
         InputStream template = GameRepository.class

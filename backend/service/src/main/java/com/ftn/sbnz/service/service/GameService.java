@@ -5,20 +5,10 @@ import com.ftn.sbnz.service.dto.game.AugmentConnectionDto;
 import com.ftn.sbnz.service.dto.game.ChampionConnectionDto;
 import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
 import com.ftn.sbnz.service.repository.*;
-import org.drools.template.ObjectDataCompiler;
-import org.kie.api.KieServices;
-import org.kie.api.builder.Message;
-import org.kie.api.builder.Results;
-import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -123,37 +113,29 @@ public class GameService {
 
 
     public String getAugmentConnection(AugmentConnectionDto augmentConnectionDto) {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kc = ks.newKieClasspathContainer();
-        KieSession ksession = kc.newKieSession("backwardKsession");
+        KieSession ksession = kSessionService.getKSessionAugmentConnection();
         Augment augment1 = augmentRepository.findById(augmentConnectionDto.getAugment1()).get();
         Augment augment2 = augmentRepository.findById(augmentConnectionDto.getAugment2()).get();
         ksession.insert(augment1);
         ksession.insert(augment2);
-        List<AugmentLocation> augmentLocations = augmentLocationRepository.findAll();
-        for(AugmentLocation augmentLocation : augmentLocations){
-            ksession.insert(augmentLocation);
-        }
         ksession.getAgenda().getAgendaGroup("areConnectedGroup").setFocus();
         long ruleFireCount = ksession.fireAllRules();
+        ksession.delete(ksession.getFactHandle(augment1));
+        ksession.delete(ksession.getFactHandle(augment2));
         System.out.println(ruleFireCount);
         return "true";
     }
 
     public String getChampionConnection(ChampionConnectionDto championConnectionDto) {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kc = ks.newKieClasspathContainer();
-        KieSession ksession = kc.newKieSession("backwardKsession2");
+        KieSession ksession = kSessionService.getkSessionChampionConnection();
         Champion champion1 = championRepository.findById(championConnectionDto.getChampion1()).get();
         Champion champion2 = championRepository.findById(championConnectionDto.getChampion2()).get();
         ksession.insert(champion1);
         ksession.insert(champion2);
-        List<ChampionLocation> championLocations = championLocationRepository.findAll();
-        for(ChampionLocation championLocation : championLocations){
-            ksession.insert(championLocation);
-        }
         ksession.getAgenda().getAgendaGroup("areConnectedGroup2").setFocus();
         long ruleFireCount = ksession.fireAllRules();
+        ksession.delete(ksession.getFactHandle(champion1));
+        ksession.delete(ksession.getFactHandle(champion2));
         System.out.println(ruleFireCount);
         return "true";
     }
@@ -166,8 +148,8 @@ public class GameService {
     }
 
     public String getHoursPlayed(String username) {
-        kSessionService.getkSessionHoursPlayed().setGlobal("username", username);
-        long ruleFireCount = kSessionService.getkSessionHoursPlayed().fireAllRules();
+        kSessionService.getKSessionHoursPlayed().setGlobal("username", username);
+        long ruleFireCount = kSessionService.getKSessionHoursPlayed().fireAllRules();
         System.out.println(ruleFireCount);
         return "A";
     }

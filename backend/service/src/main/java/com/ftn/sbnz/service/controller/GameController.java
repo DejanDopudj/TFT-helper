@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.controller;
 
 import com.ftn.sbnz.model.Augment;
+import com.ftn.sbnz.model.Game;
 import com.ftn.sbnz.service.dto.game.*;
 import com.ftn.sbnz.service.service.GameService;
 import jakarta.validation.Valid;
@@ -91,6 +92,11 @@ public class GameController {
     @PostMapping("/game")
     public String addGame() {
         return gameService.addGame();
+    }
+
+    @PostMapping("/get-game")
+    public Game getGameById(@Valid @RequestBody IdDto idDto) {
+        return gameService.getGameById(idDto.getId());
     }
 
     @PostMapping("/turn")

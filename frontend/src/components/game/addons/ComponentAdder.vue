@@ -122,7 +122,7 @@ const handleSubmitComponent = () => {
                 <div v-for="result in bestMatches">
                   <div class="flex justify-between bg-medium px-2 py-0.5 hover:bg-opacity-80 cursor-pointer" @click="handleAddComponent(result.name)">
                     <div>{{ result.name }}</div>
-                    <div v-if="missingComponents.map(x => x.name.replace('_', ' ')).includes(result.name)" class="flex flex-col justify-center">
+                    <div v-if="missingComponents.map(x => x.name.replaceAll('_', ' ')).includes(result.name)" class="flex flex-col justify-center">
                       <font-awesome-icon icon="fa-solid fa-star-of-life" class="text-dark text-xs"/>
                     </div>
                   </div>

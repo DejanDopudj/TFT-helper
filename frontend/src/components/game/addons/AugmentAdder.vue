@@ -57,7 +57,7 @@ const bestMatches = computed(() => {
     const queryLowercase = searchQuery.value.toLowerCase();
     return augments.value.filter(chosenAugment => chosenAugment.name === augment.name.replaceAll(' ', '_')).length === 0 &&
     augment.name.toLowerCase().includes(queryLowercase) &&
-    !props.augments.map(x => x.name.replace('_', ' ')).includes(augment.name)
+    !props.augments.map(x => x.name.replaceAll('_', ' ')).includes(augment.name)
   }).slice(0, 5);
 })
 

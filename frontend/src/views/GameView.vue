@@ -56,7 +56,6 @@ const openComponentAdder = () => {
       @add-augments="openAugmentAdder" @add-component="openComponentAdder"
       :augments="game.augments" :components="game.components" :missingComponents="game.missingComponents"/>
 
-
       <PlayerEditor class="absolute h-screen flex justify-center"
       v-if="playerBeingEdited" :player="playerBeingEdited" @close="playerBeingEdited = null"
       :selfEdit="game.player.id === playerBeingEdited.id" :gameId="game.id"/>

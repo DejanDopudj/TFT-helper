@@ -52,7 +52,7 @@ const hasAcquiredAllMissingComponents = () => {
     <div class="flex flex-col w-48 h-140 px-2 pointer-events-auto">
       
       <!-- augments -->
-      <div class="h-22">
+      <div>
         <div>
           <div class="text-lg text-light font-medium text-center mb-1">Augments</div>
         </div>
@@ -65,7 +65,7 @@ const hasAcquiredAllMissingComponents = () => {
           </div>
         </div>
 
-        <div v-else class="w-full h-10 border border-dashed rounded-xl"
+        <div v-if="augments.length < 3" class="w-full h-10 border border-dashed rounded-xl mt-2"
         :class="[components.length > 0 ? 'animate-pulse cursor-pointer hover:opacity-90' : 'cursor-default']"
         @click="openAugmentsAdder">
           <div class="flex flex-col justify-center w-full h-full">
@@ -77,7 +77,7 @@ const hasAcquiredAllMissingComponents = () => {
       </div>
 
       <!-- components -->
-      <div>
+      <div class="mt-2">
         <div class="flex justify-center gap-x-2 mb-1">
           <div v-if="hasAcquiredAllMissingComponents()" class="flex flex-col justify-center">
             <font-awesome-icon icon="fa-solid fa-star-of-life" class="text-light"/>

@@ -46,7 +46,7 @@ const props = defineProps({
     },
 })
 
-const augments = ref(props.augments.map(x => x))
+const augments = ref([])
 
 const closeSelf = () => {
   emit('close')
@@ -56,7 +56,8 @@ const bestMatches = computed(() => {
   return augmentList.filter(augment => {
     const queryLowercase = searchQuery.value.toLowerCase();
     return augments.value.filter(chosenAugment => chosenAugment.name === augment.name.replaceAll(' ', '_')).length === 0 &&
-    augment.name.toLowerCase().includes(queryLowercase);
+    augment.name.toLowerCase().includes(queryLowercase) &&
+    !props.augments.map(x => x.name.replace('_', ' ')).includes(augment.name)
   }).slice(0, 5);
 })
 

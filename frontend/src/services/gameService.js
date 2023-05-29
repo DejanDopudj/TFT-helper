@@ -100,3 +100,15 @@ export async function submitAugments(gameId, augmentNames, successCallback, erro
     errorCallback()
   })
 }
+
+export async function submitComponent(gameId, componentName, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/add-component', { id: gameId, componentName })
+  .then(res => {
+    if (res.data === true) successCallback()
+    else errorCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}

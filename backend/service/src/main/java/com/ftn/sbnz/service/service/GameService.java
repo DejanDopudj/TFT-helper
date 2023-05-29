@@ -140,9 +140,6 @@ public class GameService {
             augmentEvent.setName(selectedAugmentDto.getAugment());
             augmentEvent.setExecutionTime(calendar.getTime());
             ksession.insert(augmentEvent);
-=======
-            gameRepository.save(game);
->>>>>>> 3969181 (Implement augment adding interface)
             return true;
         }
         return false;

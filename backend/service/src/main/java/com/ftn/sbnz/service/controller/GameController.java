@@ -88,4 +88,20 @@ public class GameController {
         return gameService.addRoundResult(type);
     }
 
+    @PostMapping("/game")
+    public String addGame() {
+        return gameService.addGame();
+    }
+
+    @PostMapping("/turn")
+    public String addTurn() {
+        return gameService.addTurn();
+    }
+
+    @PostMapping("/action-classification")
+    public void actionClassification(@Valid @RequestBody String gameId) {
+        gameService.actionClassification(gameId);
+    }
+
+
 }

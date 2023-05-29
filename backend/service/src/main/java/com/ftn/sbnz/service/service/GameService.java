@@ -3,6 +3,7 @@ package com.ftn.sbnz.service.service;
 import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.model.event.AugmentEvent;
 import com.ftn.sbnz.model.event.RoundResultEvent;
+import com.ftn.sbnz.model.event.TurnStartEvent;
 import com.ftn.sbnz.service.dto.game.AugmentConnectionDto;
 import com.ftn.sbnz.service.dto.game.ChampionConnectionDto;
 import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
@@ -213,8 +214,44 @@ public class GameService {
         RoundResultEvent roundResultEvent = new RoundResultEvent();
         roundResultEvent.setResult(roundResult);
         roundResultEvent.setTimestamp(calendar.getTime());
-        ksession.insert(new RoundResultEvent(RoundResult.WIN));
+        ksession.insert(roundResultEvent);
         ksession.fireAllRules();
         return "true";
+    }
+
+    public String addGame() {
+        KieSession ksession = kSessionService.getPositionSession("test");
+        ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").setFocus();
+        Game game = new Game();
+        game.setPhase(0);
+        game.setHp(100);
+        game.setUsername("test");
+        game.setRound(1);
+        game.setLevel(3);
+        game.setGold(0);
+        gameRepository.save(game);
+        ksession.fireAllRules();
+        ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").clear();
+        return "true";
+
+    }
+
+    public String addTurn() {
+        KieSession ksession = kSessionService.getPositionSession("test");
+        Calendar calendar = Calendar.getInstance();
+        TurnStartEvent turnStartEvent = new TurnStartEvent();
+        turnStartEvent.setTimestamp(calendar.getTime());
+        ksession.insert(turnStartEvent);
+        ksession.fireAllRules();
+        return "true";
+    }
+
+    public void actionClassification(String gameId) {
+        KieSession ksession = kSessionService.getActionClassification();
+        Game game = gameRepository.findById(Long.valueOf(gameId)).get();
+        ksession.insert(game);
+        ksession.fireAllRules();
+        ksession.delete(ksession.getFactHandle(game));
+
     }
 }

@@ -43,6 +43,7 @@ public class KSessionService {
     private KieSession championConnection;
     private Map<String, KieSession> mapCompositionSession = new HashMap<>();
     private Map<String, KieSession> mapPositionSession = new HashMap<>();
+    private KieSession actionClassification;
 
     public KieSession getCompositionSession(String username){
         if(!mapCompositionSession.containsKey(username)){
@@ -75,6 +76,14 @@ public class KSessionService {
         KieContainer kc = ks.newKieClasspathContainer();
         KieSession ksession = kc.newKieSession("cepKsession");
         mapPositionSession.put(username, ksession);
+    }
+
+
+    public KieSession getActionClassification(){
+        if(actionClassification == null){
+            createActionClassification();
+        }
+        return actionClassification;
     }
 
     public KieSession getKsessionHistoryGrade(){
@@ -111,6 +120,53 @@ public class KSessionService {
             createChampionConnection();
         }
         return championConnection;
+    }
+
+    private void createActionClassification(){
+        InputStream template = KSessionService.class
+                .getResourceAsStream("/template/action-classification.drt");
+        List<ClassificationTemplate> data = new ArrayList<>();
+
+        // SAVE GOLD
+        data.add(new ClassificationTemplate(25, 100, 0, 1000,
+                0, 10, 0, 7, Streak.LOSS,
+                GameAction.SAVE_GOLD));
+        data.add(new ClassificationTemplate(25, 100, 0, 49,
+                0, 10, 0, 7, Streak.NONE,
+                GameAction.SAVE_GOLD));
+
+        // LEVEL UP
+        data.add(new ClassificationTemplate(25, 100, 0, 1000,
+                0, 6, 0, 4, Streak.WIN,
+                GameAction.LEVEL_UP));
+        data.add(new ClassificationTemplate(25, 100, 50, 1000,
+                0, 6, 0, 4, Streak.NONE,
+                GameAction.LEVEL_UP));
+        data.add(new ClassificationTemplate(25, 100, 50, 1000,
+                0, 7, 5, 7, Streak.NONE,
+                GameAction.LEVEL_UP));
+        data.add(new ClassificationTemplate(0, 25, 4, 1000,
+                0, 10, 0, 7, Streak.NONE,
+                GameAction.LEVEL_UP));
+
+        // ROLL
+        data.add(new ClassificationTemplate(25, 100, 0, 1000,
+                7, 10, 0, 4, Streak.WIN,
+                GameAction.ROLL));
+        data.add(new ClassificationTemplate(25, 100, 50, 1000,
+                7, 10, 0, 4, Streak.NONE,
+                GameAction.ROLL));
+        data.add(new ClassificationTemplate(25, 100, 50, 1000,
+                8, 10, 5, 7, Streak.NONE,
+                GameAction.ROLL));
+        data.add(new ClassificationTemplate(0, 25, 0, 3,
+                0, 10, 0, 7, Streak.NONE,
+                GameAction.ROLL));
+
+        ObjectDataCompiler converter = new ObjectDataCompiler();
+        String drl = converter.compile(data, template);
+
+        actionClassification = createKieSessionFromDRL(drl);
     }
 
     private void createChampionConnection() {

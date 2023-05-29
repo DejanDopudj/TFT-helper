@@ -103,5 +103,10 @@ public class GameController {
         gameService.actionClassification(gameId);
     }
 
+    @PostMapping("/change-other-player")
+    public void changeOtherPlayer(@Valid @RequestBody OtherPlayerDto otherPlayerDto) {
+        gameService.changeOtherPlayer(otherPlayerDto);
+    }
+
 
 }

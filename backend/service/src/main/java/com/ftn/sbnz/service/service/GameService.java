@@ -4,15 +4,13 @@ import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.model.event.AugmentEvent;
 import com.ftn.sbnz.model.event.RoundResultEvent;
 import com.ftn.sbnz.model.event.TurnStartEvent;
-import com.ftn.sbnz.service.dto.game.AugmentConnectionDto;
-import com.ftn.sbnz.service.dto.game.ChampionConnectionDto;
-import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
-import com.ftn.sbnz.service.dto.game.SelectedAugmentDto;
+import com.ftn.sbnz.service.dto.game.*;
 import com.ftn.sbnz.service.repository.*;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -229,6 +227,11 @@ public class GameService {
         game.setRound(1);
         game.setLevel(3);
         game.setGold(0);
+        List<Player> players = new ArrayList<>();
+        for(int i = 0; i < 7; i++){
+            players.add(new Player(100,3,0));
+        }
+        game.setOtherPlayers(players);
         gameRepository.save(game);
         ksession.fireAllRules();
         ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").clear();
@@ -253,5 +256,11 @@ public class GameService {
         ksession.fireAllRules();
         ksession.delete(ksession.getFactHandle(game));
 
+    }
+
+    public void changeOtherPlayer(OtherPlayerDto otherPlayerDto) {
+        Game game = gameRepository.findById(otherPlayerDto.getGameId()).get();
+        game.changePlayer(otherPlayerDto.getRow(), otherPlayerDto.getHp(), otherPlayerDto.getLevel(), otherPlayerDto.getGold());
+        gameRepository.save(game);
     }
 }

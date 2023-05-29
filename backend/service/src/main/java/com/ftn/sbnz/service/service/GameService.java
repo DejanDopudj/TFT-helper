@@ -10,6 +10,7 @@ import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -77,8 +78,8 @@ public class GameService {
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
             optGame.get().setHp(hp);
-            gameRepository.save(optGame.get());
             optGame.get().getPlayer().setHp(hp);
+            gameRepository.save(optGame.get());
             return true;
         }
         return false;
@@ -127,7 +128,7 @@ public class GameService {
         ksession.fireAllRules();
         ksession.delete(ksession.getFactHandle(optGame.get()));
         gameRepository.save(optGame.get());
-        return false;
+        return true;
     }
 
 
@@ -217,7 +218,9 @@ public class GameService {
         return "true";
     }
 
-    public String addGame() {
+    public String addGame(Authentication auth) {
+        // TODO: Use actual username from user
+//        User user = (User) auth.getPrincipal();
         KieSession ksession = kSessionService.getPositionSession("test");
         ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").setFocus();
         Game game = new Game();
@@ -261,11 +264,11 @@ public class GameService {
 
     public void changeOtherPlayer(OtherPlayerDto otherPlayerDto) {
         Game game = gameRepository.findById(otherPlayerDto.getGameId()).get();
-        game.changePlayer(otherPlayerDto.getRow(), otherPlayerDto.getHp(), otherPlayerDto.getLevel(), otherPlayerDto.getGold());
+        game.changePlayer(otherPlayerDto.getId(), otherPlayerDto.getHp(), otherPlayerDto.getLevel(), otherPlayerDto.getGold());
         gameRepository.save(game);
     }
 
     public Game getGameById(Long gameId) {
-        return gameRepository.findById(gameId).get();
+        return gameRepository.findById(gameId).orElseThrow();
     }
 }

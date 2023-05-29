@@ -1,45 +1,16 @@
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, defineProps } from 'vue'
 
 const emit = defineEmits(['editPlayer'])
 
-const players = ref([
-  {
-    id: '1',
-    hp: 67,
-    level: 5,
-  },
-  {
-    id: '2',
-    hp: 75,
-    level: 6,
-  },
-  {
-    id: '3',
-    hp: 63,
-    level: 7,
-  },
-  {
-    id: '4',
-    hp: 54,
-    level: 5,
-  },
-  {
-    id: '5',
-    hp: 26,
-    level: 6,
-  },
-  {
-    id: '6',
-    hp: 83,
-    level: 7,
-  },
-  {
-    id: '7',
-    hp: 52,
-    level: 5,
-  },
-])
+const props = defineProps({
+  players: {
+      type: Array,
+      required: true,
+    },
+})
+
+const players = ref(props.players)
 
 const openPlayerEdit = (player) => {
   emit('editPlayer', player)

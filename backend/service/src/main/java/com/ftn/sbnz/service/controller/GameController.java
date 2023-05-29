@@ -7,6 +7,8 @@ import com.ftn.sbnz.service.service.GameService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -90,11 +92,13 @@ public class GameController {
     }
 
     @PostMapping("/game")
-    public String addGame() {
-        return gameService.addGame();
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public String addGame(Authentication auth) {
+        return gameService.addGame(auth);
     }
 
     @PostMapping("/get-game")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public Game getGameById(@Valid @RequestBody IdDto idDto) {
         return gameService.getGameById(idDto.getId());
     }

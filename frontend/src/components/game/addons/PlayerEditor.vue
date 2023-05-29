@@ -1,6 +1,6 @@
 <script setup>
 import { ref, defineProps, defineEmits, toRefs } from 'vue'
-import { incrementPlayerLevel, decrementPlayerLevel, changePlayerHp, changePlayerGold } from '../../../services/gameService'
+import { incrementPlayerLevel, decrementPlayerLevel, changePlayerHp, changePlayerGold, changeOtherPlayer } from '../../../services/gameService'
 
 const emit = defineEmits(['close'])
 
@@ -8,7 +8,15 @@ const props = defineProps({
   player: {
     id: String,
     hp: Number,
-    level: Number
+    level: Number,
+    gold: Number,
+  },
+  selfEdit: {
+    type: Boolean,
+    default: false,
+  },
+  gameId: {
+    type: Number,
   }
 })
 
@@ -21,42 +29,72 @@ const closeSelf = () => {
 }
 
 const handleDecrementPlayerLevel = () => {
-  decrementPlayerLevel(props.player,
+  if (props.selfEdit) {
+    decrementPlayerLevel(props.gameId,
     () => {
       props.player.level--
     },
     () => {
       // boo hoo
     });
+  } else {
+    changeOtherPlayer(props.gameId, {...player.value, level: player.value.level - 1},
+    () => {
+      props.player.level--
+    },
+    () => {
+      // boo hoo
+    })
+  }
 }
 
 const handleIncrementPlayerLevel = () => {
-  incrementPlayerLevel(props.player,
+  if (props.selfEdit) {
+    incrementPlayerLevel(props.gameId,
     () => {
       props.player.level++
     },
     () => {
       // boo hoo
     });
+  } else {
+    changeOtherPlayer(props.gameId, {...player.value, level: player.value.level + 1},
+    () => {
+      props.player.level++
+    },
+    () => {
+      // boo hoo
+    })
+  }
 }
 
 const handleChangePlayerHp = () => {
   if (!(newHp.value < 0 || newHp.value > 100)) {
     newHp.value = parseInt(newHp.value)
-    changePlayerHp(props.player, newHp.value,
-    () => {
-      props.player.hp = newHp.value
-    },
-    () => {
-      // boo hoo
-    });
+    if (props.selfEdit) {
+      changePlayerHp(props.gameId, newHp.value,
+      () => {
+        props.player.hp = newHp.value
+      },
+      () => {
+        // boo hoo
+      });
+    } else {
+      changeOtherPlayer(props.gameId, {...player.value, hp: newHp.value},
+      () => {
+        props.player.hp = newHp.value
+      },
+      () => {
+        // boo hoo
+      })
+    }
   }
 }
 
 const handleChangePlayerGold = () => {
   if (!(newGold.value < 0 || newGold.value > 250)) {
     newGold.value = parseInt(newGold.value)
-    changePlayerGold(props.player, newGold.value,
+    changePlayerGold(props.gameId, newGold.value,
     () => {
       props.player.gold = newGold.value
     },
@@ -116,7 +154,7 @@ const handleChangePlayerGold = () => {
         </div>
 
         <!-- gold -->
-        <div v-if="player.gold" class="flex justify-between gap-x-4 mt-2">
+        <div v-if="selfEdit" class="flex justify-between gap-x-4 mt-2">
           
           <div class="text-2xl text-light font-bold">
             Gold {{ player.gold }} 

@@ -80,11 +80,18 @@ const removeAugment = (augmentName) => {
   augments.value = augments.value.filter(a => a.name !== augmentName.replaceAll(' ', '_'))
 }
 
+const handleShowSearch = () => {
+  openAugmentSearch.value = true
+  setTimeout(() => {
+    document.getElementById('augment-search').focus()
+  }, 50)
+}
+
 const handleSubmitAugments = () => {
   submitAugments(route.params.id, augments.value.map(x => x.name),
     () => {
-      augments.value.forEach(x => props.augments.push(x))
       closeSelf()
+      window.location.href = `/game/${route.params.id}`
     },
     () => {
       // boo hoo
@@ -121,7 +128,7 @@ const handleSubmitAugments = () => {
           <div v-if="augments.length < 3">
             <div v-if="!openAugmentSearch" class="flex flex-col mt-2">
               <div class="flex justify-between border border-medium text-white rounded-md px-2 py-1 cursor-pointer"
-              @click="openAugmentSearch = true">
+              @click="handleShowSearch()">
                 <span>Add augment</span>
                 <font-awesome-icon icon="fa-solid fa-plus" class="my-auto"/>
               </div>

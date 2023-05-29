@@ -24,8 +24,8 @@ export async function decrementPlayerLevel(player, successCallback, errorCallbac
   })
 }
 
-export async function changePlayerHp(player, newHp, successCallback, errorCallback) {
-  axiosInstance({ requiresAuth: true }).post('/api/game/set-hp', { id: player.id, value: newHp })
+export async function changePlayerHp(player, value, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/set-hp', { id: player.id, value: value })
   .then(res => {
     console.log(res)
     successCallback()
@@ -35,3 +35,16 @@ export async function changePlayerHp(player, newHp, successCallback, errorCallba
     errorCallback()
   })
 }
+
+export async function changePlayerGold(player, value, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/set-gold', { id: player.id, value: value })
+  .then(res => {
+    console.log(res)
+    successCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}
+

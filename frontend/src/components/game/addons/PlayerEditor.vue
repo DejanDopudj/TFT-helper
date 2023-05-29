@@ -1,6 +1,6 @@
 <script setup>
 import { ref, defineProps, defineEmits, toRefs } from 'vue'
-import { incrementPlayerLevel, decrementPlayerLevel, changePlayerHp } from '../../../services/gameService'
+import { incrementPlayerLevel, decrementPlayerLevel, changePlayerHp, changePlayerGold } from '../../../services/gameService'
 
 const emit = defineEmits(['close'])
 
@@ -14,6 +14,7 @@ const props = defineProps({
 
 const { player } = toRefs(props)
 const newHp = ref(props.player.hp)
+const newGold = ref(props.player.gold)
 
 const closeSelf = () => {
   emit('close')
@@ -50,7 +51,19 @@ const handleChangePlayerHp = () => {
       // boo hoo
     });
   }
+}
 
+const handleChangePlayerGold = () => {
+  if (!(newGold.value < 0 || newGold.value > 250)) {
+    newGold.value = parseInt(newGold.value)
+    changePlayerGold(props.player, newGold.value,
+    () => {
+      props.player.gold = newGold.value
+    },
+    () => {
+      // boo hoo
+    });
+  }
 }
 
 </script>
@@ -101,6 +114,25 @@ const handleChangePlayerHp = () => {
           </div>
 
         </div>
+
+        <!-- gold -->
+        <div v-if="player.gold" class="flex justify-between gap-x-4 mt-2">
+          
+          <div class="text-2xl text-light font-bold">
+            Gold {{ player.gold }} 
+          </div>
+
+          <div class="flex gap-x-2">
+            <input type="number" class="w-14 text-light bg-transparent border rounded-md outline-none
+            text-center" :placeholder="player.gold" v-model="newGold" min="0" max="100"
+            :class="[newGold < 0 || newGold > 250 ? 'border-red-500' : 'border-medium focus:border-primary']">
+            <button class="my-auto h-8 w-8 font-black bg-primary rounded-full" @click="handleChangePlayerGold">
+              <font-awesome-icon icon="fa-solid fa-save" class="my-auto mx-auto"/>
+            </button>
+          </div>
+
+        </div>
+
       </div>
     </div>
   </div>

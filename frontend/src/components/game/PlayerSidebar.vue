@@ -48,7 +48,7 @@ const openPlayerEdit = (player) => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center">
+  <div class="flex flex-col justify-center select-none">
     <div class="flex flex-col justify-between w-20 h-120">
       <div v-for="player in players">
         

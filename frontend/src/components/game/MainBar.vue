@@ -61,8 +61,8 @@ const getChampImage = (imageName) => {
       <div v-if="game.composition" class="flex justify-around h-full px-4 py-2 text-center">
         <div v-if="game.composition.defCarry" class="my-auto">
           <div class="relative flex flex-col justify-center h-24 w-24 rounded-full bg-primary">
-            <img :src="getChampImage(`${game.composition.defCarry.replaceAll('_', '').replace('Ultimate', '')}_0.jpg`)"
-            class="h-23 w-23 rounded-full mx-auto border-2 border-black"/>
+            <img :src="getChampImage(`${game.composition.defCarry.replaceAll('_', '')}_0.jpg`)"
+            class="h-23 w-23 rounded-full mx-auto border-2 border-black object-cover"/>
             <div class="absolute -bottom-1 w-full text-sm font-bold text-center my-auto">
               <div class="w-min max-w-[5rem] truncate px-2 rounded-full bg-primary text-dark mx-auto">
                 {{ game.composition.defCarry.replaceAll('_', ' ') }}
@@ -81,8 +81,8 @@ const getChampImage = (imageName) => {
 
         <div v-if="game.composition.offCarry" class="my-auto">
           <div class="relative flex flex-col justify-center h-24 w-24 rounded-full bg-secondary">
-            <img :src="getChampImage(`${game.composition.offCarry.replaceAll('_', '').replace('Ultimate', '')}_0.jpg`)"
-            class="h-23 w-23 rounded-full mx-auto border-2 border-black"/>
+            <img :src="getChampImage(`${game.composition.offCarry.replaceAll('_', '')}_0.jpg`)"
+            class="h-23 w-23 rounded-full mx-auto border-2 border-black object-cover"/>
             <div class="absolute -bottom-1 w-full text-sm font-bold text-center my-auto">
               <div class="w-min max-w-[5rem] truncate px-2 rounded-full bg-secondary text-dark mx-auto">
                 {{ game.composition.offCarry.replaceAll('_', ' ') }}

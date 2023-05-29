@@ -1,15 +1,19 @@
 package com.ftn.sbnz.service.service;
 
 import com.ftn.sbnz.model.*;
-import com.ftn.sbnz.service.dto.game.AugmentConnectionDto;
-import com.ftn.sbnz.service.dto.game.ChampionConnectionDto;
-import com.ftn.sbnz.service.dto.game.GameAugmentsDto;
+import com.ftn.sbnz.model.event.AugmentEvent;
+import com.ftn.sbnz.model.event.RoundResultEvent;
+import com.ftn.sbnz.model.event.TurnStartEvent;
+import com.ftn.sbnz.service.dto.game.*;
 import com.ftn.sbnz.service.repository.*;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class GameService {
@@ -25,6 +29,8 @@ public class GameService {
     private ChampionLocationRepository championLocationRepository;
     @Autowired
     private AugmentLocationRepository augmentLocationRepository;
+    @Autowired
+    private CompositionRepository compositionRepository;
     @Autowired
     private KSessionService kSessionService;
     public boolean increaseLevel(Long id){
@@ -110,7 +116,31 @@ public class GameService {
                         optGame.get().addAugmentChoice(augment);
                     }
             );
-            gameRepository.save(optGame.get());
+        }
+        KieSession ksession = kSessionService.getCompositionSession("test");
+        optGame.get().setPhase(0);
+        ksession.insert(optGame.get());
+        List<Composition> compositions = compositionRepository.findAll();
+        for(Composition composition : compositions){
+            optGame.get().getCompValue().put(composition, 0.0);
+        }
+        ksession.fireAllRules();
+        ksession.delete(ksession.getFactHandle(optGame.get()));
+        gameRepository.save(optGame.get());
+        return false;
+    }
+
+
+    public Boolean addSelectedAugment(SelectedAugmentDto selectedAugmentDto) {
+        Optional<Game> optGame = gameRepository.findById(selectedAugmentDto.getId());
+        KieSession ksession = kSessionService.getCompositionSession("test");
+        if(optGame.isPresent()){
+            Calendar calendar = Calendar.getInstance();
+            AugmentEvent augmentEvent = new AugmentEvent();
+            augmentEvent.setName(selectedAugmentDto.getAugment());
+            augmentEvent.setExecutionTime(calendar.getTime());
+            ksession.insert(augmentEvent);
+            return true;
         }
         return false;
     }
@@ -172,5 +202,65 @@ public class GameService {
     }
 
 
+    public String addRoundResult(String type) {
+        KieSession ksession = kSessionService.getPositionSession("test");
+        RoundResult roundResult = RoundResult.LOSS;
+        if (type.equals("WIN")){
+            roundResult = RoundResult.WIN;
+        }
+        Calendar calendar = Calendar.getInstance();
+        RoundResultEvent roundResultEvent = new RoundResultEvent();
+        roundResultEvent.setResult(roundResult);
+        roundResultEvent.setTimestamp(calendar.getTime());
+        ksession.insert(roundResultEvent);
+        ksession.fireAllRules();
+        return "true";
+    }
 
+    public String addGame() {
+        KieSession ksession = kSessionService.getPositionSession("test");
+        ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").setFocus();
+        Game game = new Game();
+        game.setPhase(0);
+        game.setHp(100);
+        game.setUsername("test");
+        game.setRound(1);
+        game.setLevel(3);
+        game.setGold(0);
+        List<Player> players = new ArrayList<>();
+        for(int i = 0; i < 7; i++){
+            players.add(new Player(100,3,0));
+        }
+        game.setOtherPlayers(players);
+        gameRepository.save(game);
+        ksession.fireAllRules();
+        ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").clear();
+        return "true";
+
+    }
+
+    public String addTurn() {
+        KieSession ksession = kSessionService.getPositionSession("test");
+        Calendar calendar = Calendar.getInstance();
+        TurnStartEvent turnStartEvent = new TurnStartEvent();
+        turnStartEvent.setTimestamp(calendar.getTime());
+        ksession.insert(turnStartEvent);
+        ksession.fireAllRules();
+        return "true";
+    }
+
+    public void actionClassification(String gameId) {
+        KieSession ksession = kSessionService.getActionClassification();
+        Game game = gameRepository.findById(Long.valueOf(gameId)).get();
+        ksession.insert(game);
+        ksession.fireAllRules();
+        ksession.delete(ksession.getFactHandle(game));
+
+    }
+
+    public void changeOtherPlayer(OtherPlayerDto otherPlayerDto) {
+        Game game = gameRepository.findById(otherPlayerDto.getGameId()).get();
+        game.changePlayer(otherPlayerDto.getRow(), otherPlayerDto.getHp(), otherPlayerDto.getLevel(), otherPlayerDto.getGold());
+        gameRepository.save(game);
+    }
 }

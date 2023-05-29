@@ -19,8 +19,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Scope("singleton")
@@ -35,11 +34,57 @@ public class KSessionService {
 
     @Autowired
     private AugmentLocationRepository augmentLocationRepository;
+    @Autowired
+    private RuleService ruleService;
 
     private KieSession ksessionHistoryGrade;
     private KieSession kSessionHoursPlayed;
     private KieSession augmentConnection;
     private KieSession championConnection;
+    private Map<String, KieSession> mapCompositionSession = new HashMap<>();
+    private Map<String, KieSession> mapPositionSession = new HashMap<>();
+    private KieSession actionClassification;
+
+    public KieSession getCompositionSession(String username){
+        if(!mapCompositionSession.containsKey(username)){
+            createCompositionSession(username);
+        }
+        return mapCompositionSession.get(username);
+    }
+
+    private void createCompositionSession(String username) {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession ksession = kc.newKieSession("rulesKsession");
+        List<Double> list = new ArrayList<>(Arrays.asList(1.0, 1.1, 1.2, 1.5));
+        ksession.setGlobal("ruleService", ruleService);
+        ksession.setGlobal("augmentEventConection", list);
+        mapCompositionSession.put(username, ksession);
+    }
+
+
+
+    public KieSession getPositionSession(String username){
+        if(!mapPositionSession.containsKey(username)){
+            createPositionSession(username);
+        }
+        return mapPositionSession.get(username);
+    }
+
+    private void createPositionSession(String username) {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession ksession = kc.newKieSession("cepKsession");
+        mapPositionSession.put(username, ksession);
+    }
+
+
+    public KieSession getActionClassification(){
+        if(actionClassification == null){
+            createActionClassification();
+        }
+        return actionClassification;
+    }
 
     public KieSession getKsessionHistoryGrade(){
         if(ksessionHistoryGrade == null){
@@ -75,6 +120,53 @@ public class KSessionService {
             createChampionConnection();
         }
         return championConnection;
+    }
+
+    private void createActionClassification(){
+        InputStream template = KSessionService.class
+                .getResourceAsStream("/template/action-classification.drt");
+        List<ClassificationTemplate> data = new ArrayList<>();
+
+        // SAVE GOLD
+        data.add(new ClassificationTemplate(25, 100, 0, 1000,
+                0, 10, 0, 7, Streak.LOSS,
+                GameAction.SAVE_GOLD));
+        data.add(new ClassificationTemplate(25, 100, 0, 49,
+                0, 10, 0, 7, Streak.NONE,
+                GameAction.SAVE_GOLD));
+
+        // LEVEL UP
+        data.add(new ClassificationTemplate(25, 100, 0, 1000,
+                0, 6, 0, 4, Streak.WIN,
+                GameAction.LEVEL_UP));
+        data.add(new ClassificationTemplate(25, 100, 50, 1000,
+                0, 6, 0, 4, Streak.NONE,
+                GameAction.LEVEL_UP));
+        data.add(new ClassificationTemplate(25, 100, 50, 1000,
+                0, 7, 5, 7, Streak.NONE,
+                GameAction.LEVEL_UP));
+        data.add(new ClassificationTemplate(0, 25, 4, 1000,
+                0, 10, 0, 7, Streak.NONE,
+                GameAction.LEVEL_UP));
+
+        // ROLL
+        data.add(new ClassificationTemplate(25, 100, 0, 1000,
+                7, 10, 0, 4, Streak.WIN,
+                GameAction.ROLL));
+        data.add(new ClassificationTemplate(25, 100, 50, 1000,
+                7, 10, 0, 4, Streak.NONE,
+                GameAction.ROLL));
+        data.add(new ClassificationTemplate(25, 100, 50, 1000,
+                8, 10, 5, 7, Streak.NONE,
+                GameAction.ROLL));
+        data.add(new ClassificationTemplate(0, 25, 0, 3,
+                0, 10, 0, 7, Streak.NONE,
+                GameAction.ROLL));
+
+        ObjectDataCompiler converter = new ObjectDataCompiler();
+        String drl = converter.compile(data, template);
+
+        actionClassification = createKieSessionFromDRL(drl);
     }
 
     private void createChampionConnection() {

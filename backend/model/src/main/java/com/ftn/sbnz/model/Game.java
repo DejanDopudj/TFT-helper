@@ -10,6 +10,7 @@ import org.springframework.data.util.Pair;
 import  java.util.AbstractMap.SimpleEntry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public class Game {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Player> otherPlayers;
     @Transient
-    private Map<Composition, Double> compValue;
+    private Map<Composition, Double> compValue = new HashMap<>();
     @Transient
     private Double phase;
     private int hp;
@@ -60,6 +61,8 @@ public class Game {
     private int gold;
 
     private int place;
+
+    private String carry;
 
     public void addComponent(Component component){
         this.components.add(component);
@@ -92,6 +95,11 @@ public class Game {
         phase = value;
     }
 
+    public void changePlayer(int i, int hp, int level, int gold){
+        otherPlayers.get(i).setHp(hp);
+        otherPlayers.get(i).setLevel(level);
+        otherPlayers.get(i).setGold(gold);
+    }
 
     public double getAverageLevel() {
         return (player.getLevel() + otherPlayers.stream()

@@ -54,6 +54,11 @@ public class GameController {
         return ResponseEntity.ok(gameService.addAugments(gameAugmentsDto));
     }
 
+    @PostMapping("/add-selected-augment")
+    public ResponseEntity<Boolean> addSelectedAugment(@Valid @RequestBody SelectedAugmentDto selectedAugmentDto) {
+        return ResponseEntity.ok(gameService.addSelectedAugment(selectedAugmentDto));
+    }
+
 
     @PostMapping("/get-augment-connection")
     public String getAugmentConnection(@Valid @RequestBody AugmentConnectionDto augmentConnectionDto) {
@@ -75,5 +80,33 @@ public class GameController {
     public String getHoursPlayed(@Valid @RequestBody String username) {
         return gameService.getHoursPlayed(username);
     }
+
+
+
+    @PostMapping("/round-result")
+    public String addRoundResult(@Valid @RequestBody String type) {
+        return gameService.addRoundResult(type);
+    }
+
+    @PostMapping("/game")
+    public String addGame() {
+        return gameService.addGame();
+    }
+
+    @PostMapping("/turn")
+    public String addTurn() {
+        return gameService.addTurn();
+    }
+
+    @PostMapping("/action-classification")
+    public void actionClassification(@Valid @RequestBody String gameId) {
+        gameService.actionClassification(gameId);
+    }
+
+    @PostMapping("/change-other-player")
+    public void changeOtherPlayer(@Valid @RequestBody OtherPlayerDto otherPlayerDto) {
+        gameService.changeOtherPlayer(otherPlayerDto);
+    }
+
 
 }

@@ -34,6 +34,8 @@ public class Game {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Component> components;
     @ManyToMany(cascade = CascadeType.ALL)
+    private List<Component> missingComponents;
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Champion> champions;
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Augment> augments;

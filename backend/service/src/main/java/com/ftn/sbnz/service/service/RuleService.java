@@ -23,12 +23,17 @@ public class RuleService {
         if(composition == null){
             return 1;
         }
-        return (double) compositionAugmentRepository.findByAugmentAndComposition(augment, composition).get(0).getConnection() / 100;
+        Double retValue = (double) compositionAugmentRepository.findByAugmentAndComposition(augment, composition).get(0).getConnection() / 100;
+        return retValue;
     }
 
-    public List<Component> getMissingComponents(Carry carry, List<Component> components){
+    public List<Component> getMissingComponents(Carry carry, Game game){
+        List<Component> components = game.getComponents();
         List<ChampionComponent> champComponents = championComponentRepository.findByChampionAndConnectionIsGreaterThan(championRepository.findById(carry.getName()).get(), 50);
         champComponents.removeIf(championComponent -> components.contains(championComponent.getComponent()));
+        game.setMissingComponents(champComponents.stream()
+                .map(ChampionComponent::getComponent)
+                .collect(Collectors.toList()));
         return  champComponents.stream()
                 .map(ChampionComponent::getComponent)
                 .collect(Collectors.toList());

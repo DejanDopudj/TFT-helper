@@ -110,6 +110,7 @@ public class GameService {
     public Boolean addAugments(GameAugmentsDto gameAugmentsDto) {
         Optional<Game> optGame = gameRepository.findById(gameAugmentsDto.getId());
         if(optGame.isPresent()){
+            optGame.get().setAugmentChoice(new ArrayList<>());
             gameAugmentsDto.getAugmentNames().stream().forEach(
                     augmentName -> {
                         Augment augment = augmentRepository.findById(augmentName).get();

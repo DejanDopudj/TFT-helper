@@ -110,6 +110,7 @@ public class GameService {
     public Boolean addAugments(GameAugmentsDto gameAugmentsDto) {
         Optional<Game> optGame = gameRepository.findById(gameAugmentsDto.getId());
         if(optGame.isPresent()){
+            optGame.get().setAugmentChoice(new ArrayList<>());
             gameAugmentsDto.getAugmentNames().stream().forEach(
                     augmentName -> {
                         Augment augment = augmentRepository.findById(augmentName).get();
@@ -223,6 +224,7 @@ public class GameService {
         Game game = new Game();
         game.setPhase(0);
         game.setHp(100);
+        game.setPlayer(new Player(100,3,0));
         game.setUsername("test");
         game.setRound(1);
         game.setLevel(3);
@@ -235,7 +237,7 @@ public class GameService {
         gameRepository.save(game);
         ksession.fireAllRules();
         ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").clear();
-        return "true";
+        return game.getId().toString();
 
     }
 
@@ -262,5 +264,9 @@ public class GameService {
         Game game = gameRepository.findById(otherPlayerDto.getGameId()).get();
         game.changePlayer(otherPlayerDto.getRow(), otherPlayerDto.getHp(), otherPlayerDto.getLevel(), otherPlayerDto.getGold());
         gameRepository.save(game);
+    }
+
+    public Game getGameById(Long gameId) {
+        return gameRepository.findById(gameId).get();
     }
 }

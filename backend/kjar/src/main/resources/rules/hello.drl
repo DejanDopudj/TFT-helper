@@ -27,7 +27,10 @@ no-loop
         )
     then
         Augment augment = (Augment)$augment1;
-        $aug1 = ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug1.intValue());
+        System.out.println($currentGame);
+        System.out.println($currentGame.getComposition());
+        $aug1 =
+        (1 - ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition())) *  augment.getAveragePlace() * (Double) augmentEventConection.get($aug1.intValue());
         modify($currentGame) {
             addAugmentChoiceValue(augment, $aug1.doubleValue() )
         };
@@ -48,7 +51,8 @@ no-loop
         )
     then
         Augment augment = (Augment)$augment2;
-        $aug2 = ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug2.intValue());
+        $aug2 =
+        (1 - ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition())) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug2.intValue());
         modify($currentGame) {
             addAugmentChoiceValue(augment, $aug2.doubleValue() )
         };
@@ -70,7 +74,7 @@ no-loop
     then
         Augment augment = (Augment)$augment3;
         $aug3 =
-        ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition()) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug3.intValue());
+        (1 - ruleService.getAugmentCompositionConnection(augment, $currentGame.getComposition())) * augment.getAveragePlace() * (Double) augmentEventConection.get($aug3.intValue());
         modify($currentGame) {
             addAugmentChoiceValue(augment, $aug3.doubleValue() )
         };
@@ -193,7 +197,7 @@ when
     $currentGame: Game(username == "test", phase == 6)
     eval($currentGame.getComponents().size() > 0)
 then
-    List<Component> missingComponents = ruleService.getMissingComponents($carry, $currentGame.getComponents());
+    List<Component> missingComponents = ruleService.getMissingComponents($carry, $currentGame);
     System.out.print("You are missing: ");
     for(Component component : missingComponents){
         System.out.print(component.getName() + " ");

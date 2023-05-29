@@ -27,7 +27,7 @@ const handleLogout = () => {
   <div class="flex justify-between px-4 md:px-12 py-2 md:py-4">
     <div>
       <RouterLink to="/">
-        <img src="src/assets/images/logo-sm.png" alt="" class="h-12">
+        <img src="@/assets/images/logo-sm.png" alt="" class="h-12">
       </RouterLink>
     </div>
     <div v-if="!isLoginPage && !isLoggedIn">

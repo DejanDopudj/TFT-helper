@@ -6,7 +6,9 @@ export function axiosInstance({ requiresAuth = false } = {}) {
 
   //? Decide add token or not
   if (requiresAuth) {
-    options.headers.Authorization = getToken()
+    options.headers = {
+      Authorization: getToken()
+    }
   }
 
   const instance = axios.create(options)

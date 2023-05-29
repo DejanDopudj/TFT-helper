@@ -15,6 +15,7 @@ export default {
         "secondary": "#00A8BF",
       },
       spacing: {
+        "13": "3.25rem",
         "76": "19rem",
         "88": "22rem",
         "100": "25rem",

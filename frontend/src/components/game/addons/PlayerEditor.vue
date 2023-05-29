@@ -69,7 +69,7 @@ const handleChangePlayerGold = () => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full justify-center mx-auto" @click.self="closeSelf">
+  <div class="flex flex-col w-full justify-center mx-auto bg-dark bg-opacity-30" @click.self="closeSelf">
     <div class="flex justify-center mx-auto">
       <div class="flex flex-col bg-dork w-80 rounded-md py-4 px-6">
         <div class="flex justify-between">

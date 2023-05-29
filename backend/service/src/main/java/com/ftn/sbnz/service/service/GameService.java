@@ -100,7 +100,6 @@ public class GameService {
             Game game = optGame.get();
             Component component = componentRepository.findById(componentName).get();
             game.addComponent(component);
-            game.setGold(15);
             gameRepository.save(game);
             return true;
         }
@@ -141,6 +140,9 @@ public class GameService {
             augmentEvent.setName(selectedAugmentDto.getAugment());
             augmentEvent.setExecutionTime(calendar.getTime());
             ksession.insert(augmentEvent);
+=======
+            gameRepository.save(game);
+>>>>>>> 3969181 (Implement augment adding interface)
             return true;
         }
         return false;

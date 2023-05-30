@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
   game: {
@@ -8,7 +8,13 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['openFinishGame'])
+
 const game = ref(props.game)
+
+const handleOpenFinishGame = () => {
+  emit('openFinishGame')
+}
 
 </script>
 
@@ -21,7 +27,7 @@ const game = ref(props.game)
       </div>
 
       <button class="flex flex-col justify-center text-2xl bg-primary py-2 px-4 rounded-b-xl
-      font-medium tracking-wider hover:bg-opacity-90">
+      font-medium tracking-wider hover:bg-opacity-90" @click="handleOpenFinishGame">
         FINISH GAME
       </button>
 

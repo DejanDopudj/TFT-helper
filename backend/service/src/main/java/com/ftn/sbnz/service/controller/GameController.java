@@ -68,7 +68,6 @@ public class GameController {
         return ResponseEntity.ok(gameService.addSelectedAugment(selectedAugmentDto));
     }
 
-
     @PostMapping("/get-augment-connection")
     @PreAuthorize("hasRole('ROLE_USER')")
     public String getAugmentConnection(@Valid @RequestBody AugmentConnectionDto augmentConnectionDto) {

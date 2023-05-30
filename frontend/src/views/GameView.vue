@@ -14,6 +14,7 @@ import ComponentAdder from '../components/game/addons/ComponentAdder.vue';
 import AugmentSelector from '../components/game/addons/AugmentSelector.vue';
 import AugmentConnector from '../components/game/addons/AugmentConnector.vue';
 import ChampConnector from '../components/game/addons/ChampConnector.vue';
+import GameFinisher from '../components/game/addons/GameFinisher.vue';
 
 if (!isUserLoggedIn()) window.location.href = '/login'
 
@@ -37,6 +38,7 @@ const openAddComponent = ref(false)
 const openSelectAugment = ref(false)
 const openConnectAugments = ref(false)
 const openConnectChamps = ref(false)
+const openFinishGame = ref(false)
 
 const openPlayerEdit = (player) => {
   playerBeingEdited.value = player
@@ -63,18 +65,22 @@ const openChampConnector = () => {
   openConnectChamps.value = true
 }
 
+const openGameFinisher = () => {
+  openFinishGame.value = true
+}
+
 </script>
 
 <template>
   <div class="h-full">
-    <div class="relative h-full" v-if="game">
+    <div class="relative h-full" v-if="game && game.place === 0">
       <PlayerSidebar class="absolute h-screen right-0 my-auto" @edit-player="openPlayerEdit" :players="game.otherPlayers"/>
       <div class="absolute w-full h-screen flex flex-col justify-end pointer-events-none">
         <MainBar class="flex justify-center" @edit-player="openPlayerEdit" :game="game"/>
       </div>
     
       <div class="absolute w-full h-screen flex flex-col justify-start pointer-events-none">
-        <TopBar class="flex justify-center" @edit-player="openPlayerEdit" :game="game"/>
+        <TopBar class="flex justify-center" @open-finish-game="openGameFinisher" :game="game"/>
       </div>
 
       <AugmentComponentSidebar class="absolute h-screen left-0 my-auto"
@@ -101,6 +107,13 @@ const openChampConnector = () => {
       <ChampConnector class="absolute h-screen flex justify-center"
       v-if="openConnectChamps" @close="openConnectChamps = false"/>
 
+      <GameFinisher class="absolute h-screen flex justify-center"
+      v-if="openFinishGame" @close="openFinishGame = false"/>
+
+    </div>
+    
+    <div v-if="game && game.place !== 0" class="h-screen flex flex-col justify-center text-center font-mono">
+      <div class="text-xl text-primary">Game is finished</div>
     </div>
 
     <div v-if="!game && showNotFound" class="h-screen flex flex-col justify-center text-center font-mono">

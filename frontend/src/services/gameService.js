@@ -184,3 +184,15 @@ export async function getChampConnection(champion1, champion2, successCallback, 
     errorCallback()
   })
 }
+
+export async function setPlace(gameId, value, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/set-place', { id: gameId, value } )
+  .then(res => {
+    if (res.data) successCallback(res.data)
+    else errorCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}

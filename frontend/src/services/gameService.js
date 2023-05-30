@@ -124,3 +124,16 @@ export async function startNextTurn(gameId, successCallback, errorCallback) {
     errorCallback()
   })
 }
+
+export async function startNextRound(gameId, result, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/round-result', { gameId, result })
+  .then(res => {
+    if (res.data === true) successCallback()
+    else errorCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}
+

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, defineEmits, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
-import { startNextTurn } from '../../services/gameService'
+import { startNextTurn, startNextRound } from '../../services/gameService'
 
 const emit = defineEmits(['editPlayer'])
 const route = useRoute()
@@ -14,6 +14,7 @@ const props = defineProps({
 })
 
 const game = ref(props.game)
+const showWinLossButtons = ref(false)
 
 const openPlayerEdit = (player) => {
   emit('editPlayer', player)
@@ -27,6 +28,18 @@ const getChampImage = (imageName) => {
 const handleNextTurn = () => {
   startNextTurn(
     game.value.id,
+    () => {
+      window.location.href = `/game/${route.params.id}`
+    },
+    () => {
+      // boo hoo
+    });
+}
+
+const handleNextRound = (result) => {
+  startNextRound(
+    game.value.id,
+    result,
     () => {
       window.location.href = `/game/${route.params.id}`
     },
@@ -63,7 +76,16 @@ const handleNextTurn = () => {
       </div>
     </div>
     
-    <div class="w-4/5 md:w-160 h-36 border border-dork rounded-xl">
+    <div class="relative w-4/5 md:w-160 h-36 border border-dork rounded-xl">
+
+      <div v-if="game.streak !== 'NONE'" class="absolute flex justify-center
+      pointer-events-none w-full mx-auto -top-16 text-2xl">
+        <div class="font-bold"
+        :class="[(game.streak === 'WIN' ? 'text-primary' : 'text-secondary')]">
+          {{ game.streak === 'WIN' ? 'WINNING STREAK' : 'LOSING STREAK' }}
+        </div>
+      </div>
+
       <div class="flex justify-between gap-x-32 w-full">
         <!-- next turn -->
         <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light
@@ -80,10 +102,20 @@ const handleNextTurn = () => {
         </div>
 
         <!-- next turn -->
-        <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light
-        font-medium hover:bg-opacity-80">
+        <button v-if="!showWinLossButtons" class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light
+        font-medium hover:bg-opacity-80" @click="showWinLossButtons = true">
           Next Round
         </button>
+        <div v-if="showWinLossButtons" class="flex justify-center gap-x-2">
+          <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-primary text-black
+          font-medium hover:bg-opacity-80" @click="handleNextRound('WIN')">
+            WIN
+          </button>
+          <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-secondary text-black
+          font-medium hover:bg-opacity-80" @click="handleNextRound('LOSS')">
+            LOSS
+          </button>
+        </div>
       </div>
 
       <div v-if="game.composition" class="flex justify-around h-full px-4 py-2 text-center">

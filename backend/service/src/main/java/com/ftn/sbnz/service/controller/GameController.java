@@ -1,6 +1,5 @@
 package com.ftn.sbnz.service.controller;
 
-import com.ftn.sbnz.model.Augment;
 import com.ftn.sbnz.model.Game;
 import com.ftn.sbnz.service.dto.game.*;
 import com.ftn.sbnz.service.service.GameService;
@@ -23,72 +22,83 @@ public class GameController {
     GameService gameService;
 
     @PostMapping("/increase-level")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> increaseLevel(@Valid @RequestBody IdDto idDto) {
         return ResponseEntity.ok(gameService.increaseLevel(idDto.getId()));
     }
 
     @PostMapping("/decrease-level")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> decreaseLevel(@Valid @RequestBody IdDto idDto) {
         return ResponseEntity.ok(gameService.decreaseLevel(idDto.getId()));
     }
 
     @PostMapping("/set-gold")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> setGold(@Valid @RequestBody IdValueDto idValueDto) {
         return ResponseEntity.ok(gameService.setGold(idValueDto.getId(),idValueDto.getValue()));
     }
 
     @PostMapping("/set-hp")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> setHp(@Valid @RequestBody IdValueDto idValueDto) {
         return ResponseEntity.ok(gameService.setHP(idValueDto.getId(),idValueDto.getValue()));
     }
 
     @PostMapping("/set-place")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> setPlace(@Valid @RequestBody IdValueDto idValueDto) {
         return ResponseEntity.ok(gameService.setPlace(idValueDto.getId(),idValueDto.getValue()));
     }
 
 
     @PostMapping("/add-component")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> addComponent(@Valid @RequestBody GameComponentDto gameComponentDto) {
         return ResponseEntity.ok(gameService.addComponent(gameComponentDto.getId(),gameComponentDto.getComponentName()));
     }
     @PostMapping("/add-augments")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> addAugments(@Valid @RequestBody GameAugmentsDto gameAugmentsDto) {
         return ResponseEntity.ok(gameService.addAugments(gameAugmentsDto));
     }
 
     @PostMapping("/add-selected-augment")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> addSelectedAugment(@Valid @RequestBody SelectedAugmentDto selectedAugmentDto) {
         return ResponseEntity.ok(gameService.addSelectedAugment(selectedAugmentDto));
     }
 
 
     @PostMapping("/get-augment-connection")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public String getAugmentConnection(@Valid @RequestBody AugmentConnectionDto augmentConnectionDto) {
         return gameService.getAugmentConnection(augmentConnectionDto);
     }
 
     @PostMapping("/get-champion-connection")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public String getChampionConnection(@Valid @RequestBody ChampionConnectionDto championConnectionDto) {
         return gameService.getChampionConnection(championConnectionDto);
     }
 
 
     @PostMapping("/get-history-grade")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public String getHistoryGrade(@Valid @RequestBody String username) {
         return gameService.getHistoryGrade(username);
     }
 
     @PostMapping("/get-hours-played")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public String getHoursPlayed(@Valid @RequestBody String username) {
         return gameService.getHoursPlayed(username);
     }
 
-
-
     @PostMapping("/round-result")
-    public String addRoundResult(@Valid @RequestBody String type) {
-        return gameService.addRoundResult(type);
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public String addRoundResult(@Valid @RequestBody RoundResultDto roundResultDto) {
+        return gameService.addRoundResult(roundResultDto.getGameId(), roundResultDto.getResult());
     }
 
     @PostMapping("/game")
@@ -104,16 +114,19 @@ public class GameController {
     }
 
     @PostMapping("/turn")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public String addTurn(@Valid @RequestBody IdDto idDto) {
         return gameService.addTurn(idDto.getId());
     }
 
     @PostMapping("/action-classification")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public void actionClassification(@Valid @RequestBody String gameId) {
         gameService.actionClassification(gameId);
     }
 
     @PostMapping("/change-other-player")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public void changeOtherPlayer(@Valid @RequestBody OtherPlayerDto otherPlayerDto) {
         gameService.changeOtherPlayer(otherPlayerDto);
     }

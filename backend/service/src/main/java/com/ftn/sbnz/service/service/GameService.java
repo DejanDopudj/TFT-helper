@@ -219,7 +219,8 @@ public class GameService {
     }
 
 
-    public String addRoundResult(String type) {
+    public String addRoundResult(Long gameId, String type) {
+        Game game = positionSessionGameMap.get(gameId);
         KieSession ksession = kSessionService.getPositionSession("test");
         RoundResult roundResult = RoundResult.LOSS;
         if (type.equals("WIN")){
@@ -231,6 +232,7 @@ public class GameService {
         roundResultEvent.setTimestamp(calendar.getTime());
         ksession.insert(roundResultEvent);
         ksession.fireAllRules();
+        gameRepository.save(game);
         return "true";
     }
 

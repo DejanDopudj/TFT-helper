@@ -45,6 +45,7 @@ rule "Write round result"
         $r: RoundResultEvent()
     then
 		System.out.println("> " + $r.getResult());
+		modify($game) { setRound($game.getRound() + 1) };
 end
 
 rule "End win streak"

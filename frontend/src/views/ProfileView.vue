@@ -1,9 +1,9 @@
 <script setup>
-import Login from '../components/auth/Login.vue'
+import Profile from '../components/profile/Profile.vue'
 </script>
 
 <template>
   <div class="h-screen flex flex-col justify-center">
-    <Login />
+    <Profile />
   </div>
 </template>

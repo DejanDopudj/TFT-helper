@@ -199,6 +199,7 @@ public class GameService {
     }
 
     public String getHistoryGrade(String username) {
+        kSessionService.resetKsessionHistoryGrade();
         kSessionService.getKsessionHistoryGrade().setGlobal("username", username);
         Result result = new Result();
         kSessionService.getKsessionHistoryGrade().insert(result);
@@ -209,6 +210,7 @@ public class GameService {
     }
 
     public String getHoursPlayed(String username) {
+        kSessionService.resetKSessionHoursPlayed();
         kSessionService.getKSessionHoursPlayed().setGlobal("username", username);
         Result result = new Result();
         kSessionService.getKSessionHoursPlayed().insert(result);

@@ -74,7 +74,7 @@ const openGameFinisher = () => {
 <template>
   <div class="h-full">
     <div class="relative h-full" v-if="game && game.place === 0">
-      <PlayerSidebar class="absolute h-screen right-0 my-auto" @edit-player="openPlayerEdit" :players="game.otherPlayers"/>
+      <PlayerSidebar class="absolute h-screen right-0 my-auto pointer-events-none" @edit-player="openPlayerEdit" :players="game.otherPlayers"/>
       <div class="absolute w-full h-screen flex flex-col justify-end pointer-events-none">
         <MainBar class="flex justify-center" @edit-player="openPlayerEdit" :game="game"/>
       </div>

@@ -27,6 +27,8 @@ when
     eval($placeSum.doubleValue() / $placeCount.doubleValue() < @{maxPlace})
     $result: Result()
 then
+    System.out.println("PLACE SUM:" + $placeSum);
+    System.out.println("PLACE COUNT:" + $placeCount);
     modify($result) {
         setValue("Adequate grade is: @{grade}");
     }

@@ -20,7 +20,7 @@ const openPlayerEdit = (player) => {
 
 <template>
   <div class="flex flex-col justify-center select-none">
-    <div class="flex flex-col justify-between w-20 h-120">
+    <div class="flex flex-col justify-between w-20 h-120 pointer-events-auto">
       <div v-for="player in players">
         
         <div class="relative cursor-pointer" @click="openPlayerEdit(player)">

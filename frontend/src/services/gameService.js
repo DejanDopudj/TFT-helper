@@ -196,3 +196,25 @@ export async function setPlace(gameId, value, successCallback, errorCallback) {
     errorCallback()
   })
 }
+
+export async function getHistoryGrade(username, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/get-history-grade', { username } )
+  .then(res => {
+    successCallback(res.data)
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}
+
+export async function getHoursPlayed(username, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/get-hours-played', { username } )
+  .then(res => {
+    successCallback(res.data)
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}

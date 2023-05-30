@@ -83,14 +83,14 @@ public class GameController {
 
     @PostMapping("/get-history-grade")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public String getHistoryGrade(@Valid @RequestBody String username) {
-        return gameService.getHistoryGrade(username);
+    public String getHistoryGrade(@Valid @RequestBody UserDto dto) {
+        return gameService.getHistoryGrade(dto.getUsername());
     }
 
     @PostMapping("/get-hours-played")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public String getHoursPlayed(@Valid @RequestBody String username) {
-        return gameService.getHoursPlayed(username);
+    public String getHoursPlayed(@Valid @RequestBody UserDto dto) {
+        return gameService.getHoursPlayed(dto.getUsername());
     }
 
     @PostMapping("/round-result")

@@ -162,9 +162,20 @@ export async function getHint(gameId, successCallback, errorCallback) {
 }
 
 export async function getAugmentConnection(augment1, augment2, successCallback, errorCallback) {
-  axiosInstance({ requiresAuth: true }).post('/api/game/get-augment-connection', { augment1: augment1, augment2: augment2 } )
+  axiosInstance({ requiresAuth: true }).post('/api/game/get-augment-connection', { augment1, augment2 } )
   .then(res => {
-    console.log(res.data)
+    if (res.data) successCallback(res.data)
+    else errorCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}
+
+export async function getChampConnection(champion1, champion2, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/get-champion-connection', { champion1, champion2 } )
+  .then(res => {
     if (res.data) successCallback(res.data)
     else errorCallback()
   })

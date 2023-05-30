@@ -13,6 +13,7 @@ import AugmentAdder from '../components/game/addons/AugmentAdder.vue';
 import ComponentAdder from '../components/game/addons/ComponentAdder.vue';
 import AugmentSelector from '../components/game/addons/AugmentSelector.vue';
 import AugmentConnector from '../components/game/addons/AugmentConnector.vue';
+import ChampConnector from '../components/game/addons/ChampConnector.vue';
 
 if (!isUserLoggedIn()) window.location.href = '/login'
 
@@ -97,6 +98,8 @@ const openChampConnector = () => {
 
       <AugmentConnector class="absolute h-screen flex justify-center"
       v-if="openConnectAugments" @close="openConnectAugments = false"/>
+      <ChampConnector class="absolute h-screen flex justify-center"
+      v-if="openConnectChamps" @close="openConnectChamps = false"/>
 
     </div>
 

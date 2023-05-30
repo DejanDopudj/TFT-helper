@@ -52,6 +52,13 @@ public class KSessionService {
         return mapCompositionSession.get(username);
     }
 
+    public void resetCompositionSession(String username) {
+        if (mapCompositionSession.containsKey(username)) {
+            mapCompositionSession.get(username).dispose();
+        }
+        createCompositionSession(username);
+    }
+
     private void createCompositionSession(String username) {
         KieServices ks = KieServices.Factory.get();
         KieContainer kc = ks.newKieClasspathContainer();
@@ -62,13 +69,18 @@ public class KSessionService {
         mapCompositionSession.put(username, ksession);
     }
 
-
-
     public KieSession getPositionSession(String username){
         if(!mapPositionSession.containsKey(username)){
             createPositionSession(username);
         }
         return mapPositionSession.get(username);
+    }
+
+    public void resetPositionSession(String username) {
+        if (mapPositionSession.containsKey(username)) {
+            mapPositionSession.get(username).dispose();
+        }
+        createPositionSession(username);
     }
 
     private void createPositionSession(String username) {
@@ -92,12 +104,28 @@ public class KSessionService {
         }
         return ksessionHistoryGrade;
     }
+
+    public void resetKsessionHistoryGrade() {
+        if (ksessionHistoryGrade != null) {
+            ksessionHistoryGrade.dispose();
+        }
+        createHistoryGrade();
+    }
+
     public KieSession getKSessionHoursPlayed(){
         if(kSessionHoursPlayed == null){
             createHoursPlayed();
         }
         return kSessionHoursPlayed;
     }
+
+    public void resetKSessionHoursPlayed() {
+        if (kSessionHoursPlayed != null) {
+            kSessionHoursPlayed.dispose();
+        }
+        createHoursPlayed();
+    }
+
     public KieSession getKSessionAugmentConnection(){
         if(augmentConnection == null){
             createAugmentConnection();
@@ -185,16 +213,16 @@ public class KSessionService {
                 .getResourceAsStream("/template/hoursPlayed.drt");
         List<HoursPlayedTemplate> data = new ArrayList<>();
 
-        data.add(new HoursPlayedTemplate(0,5, "~3"));
-        data.add(new HoursPlayedTemplate(6,10, "~5"));
-        data.add(new HoursPlayedTemplate(11,20, "~10"));
+        data.add(new HoursPlayedTemplate(1,5, "~3"));
+        data.add(new HoursPlayedTemplate(5,10, "~5"));
+        data.add(new HoursPlayedTemplate(10,20, "~10"));
         data.add(new HoursPlayedTemplate(20,50, "~25"));
         data.add(new HoursPlayedTemplate(50,100, "~50"));
 
         ObjectDataCompiler converter = new ObjectDataCompiler();
         String drl = converter.compile(data, template);
 
-        System.out.println(drl);
+//        System.out.println(drl);
 
         kSessionHoursPlayed = createKieSessionFromDRL(drl);
 
@@ -223,7 +251,7 @@ public class KSessionService {
         ObjectDataCompiler converter = new ObjectDataCompiler();
         String drl = converter.compile(data, template);
 
-        System.out.println(drl);
+//        System.out.println(drl);
 
         ksessionHistoryGrade = createKieSessionFromDRL(drl);
 
@@ -251,5 +279,4 @@ public class KSessionService {
 
         return kieHelper.build().newKieSession();
     }
-
 }

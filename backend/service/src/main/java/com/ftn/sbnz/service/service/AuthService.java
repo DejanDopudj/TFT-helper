@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.service;
 
 import com.ftn.sbnz.service.dto.JwtAuthenticationRequestDTO;
+import com.ftn.sbnz.service.dto.UserResponseDto;
 import com.ftn.sbnz.service.dto.creation.UserCreationDTO;
 import com.ftn.sbnz.service.exception.UserAlreadyExistsException;
 import com.ftn.sbnz.model.User;
@@ -69,5 +70,13 @@ public class AuthService {
         else {
             throw new UserAlreadyExistsException();
         }
+    }
+
+    public UserResponseDto whoami(Authentication auth) {
+        User user = (User) auth.getPrincipal();
+        UserResponseDto dto = new UserResponseDto();
+        dto.setEmail(user.getEmail());
+        dto.setUsername(user.getUsername());
+        return dto;
     }
 }

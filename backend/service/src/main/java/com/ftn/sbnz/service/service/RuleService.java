@@ -21,7 +21,7 @@ public class RuleService {
 
     public double getAugmentCompositionConnection(Augment augment, Composition composition){
         if(composition == null){
-            return 1;
+            return 0.0;
         }
         Double retValue = (double) compositionAugmentRepository.findByAugmentAndComposition(augment, composition).get(0).getConnection() / 100;
         return retValue;

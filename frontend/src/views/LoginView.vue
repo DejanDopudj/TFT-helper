@@ -7,9 +7,3 @@ import Login from '../components/auth/Login.vue'
     <Login />
   </div>
 </template>
-
-<script>
-export default {
-  
-}
-</script>

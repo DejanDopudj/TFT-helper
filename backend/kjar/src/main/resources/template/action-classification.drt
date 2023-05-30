@@ -39,6 +39,7 @@ when
     ) from $game.getPlayer();
 then
     System.out.println("Adequate actions is: @{action}");
+    modify($game) { setLatestHint(GameAction.@{action}) };
 end
 
 end template

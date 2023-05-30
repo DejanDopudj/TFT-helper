@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AugmentRepository extends JpaRepository<Augment, String> {
 
-
 }

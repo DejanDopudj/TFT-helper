@@ -7,12 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.tools.ant.taskdefs.PathConvert;
 import org.springframework.data.util.Pair;
-import  java.util.AbstractMap.SimpleEntry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import  java.util.AbstractMap.SimpleEntry;
 
 @Entity
 @Data
@@ -25,6 +22,7 @@ public class Game {
     private Long id;
 
     private int round;
+    private int turn;
     private Streak streak = Streak.NONE;
     private String username;
 
@@ -51,7 +49,7 @@ public class Game {
     @OneToOne(cascade = CascadeType.ALL)
     private Player player;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Player> otherPlayers;
     @Transient
     private Map<Composition, Double> compValue = new HashMap<>();
@@ -64,7 +62,12 @@ public class Game {
 
     private int place;
 
+    private GameAction latestHint;
+
     private String carry;
+
+    private PlayerPosition currentPosition;
+    private PlayerPositionTrend currentPositionTrend;
 
     public void addComponent(Component component){
         this.components.add(component);
@@ -97,10 +100,11 @@ public class Game {
         phase = value;
     }
 
-    public void changePlayer(int i, int hp, int level, int gold){
-        otherPlayers.get(i).setHp(hp);
-        otherPlayers.get(i).setLevel(level);
-        otherPlayers.get(i).setGold(gold);
+    public void changePlayer(UUID id, int hp, int level, int gold) {
+        Player player = otherPlayers.stream().filter(p -> p.getId().equals(id)).findFirst().orElseThrow();
+        player.setHp(hp);
+        player.setLevel(level);
+        player.setGold(gold);
     }
 
     public double getAverageLevel() {

@@ -42,3 +42,15 @@ export async function register(email, username, password, successCallback, error
     else errorCallback(null)
   })
 }
+
+export async function whoami(successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).get('/api/auth/whoami')
+  .then(res => {
+    successCallback(res.data)
+  })
+  .catch(err => {
+    console.log(err)
+    if (err.response?.data?.message) errorCallback(err.response.data.message)
+    else errorCallback(null)
+  })
+}

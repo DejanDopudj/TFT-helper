@@ -105,6 +105,9 @@ public class GameService {
         if(optGame.isPresent()){
             optGame.get().setPlace(place);
             gameRepository.save(optGame.get());
+            KieSession positionSession = kSessionService.getPositionSession(optGame.get().getUsername());
+            positionSession.delete(positionSession.getFactHandle(positionSessionGameMap.get(optGame.get().getId())));
+            kSessionService.resetCompositionSession(optGame.get().getUsername());
             return true;
         }
         return false;
@@ -118,6 +121,10 @@ public class GameService {
             Component component = componentRepository.findById(componentName).get();
             game.addComponent(component);
             gameRepository.save(game);
+            KieSession positionSession = kSessionService.getPositionSession(optGame.get().getUsername());
+            positionSession.delete(positionSession.getFactHandle(positionSessionGameMap.get(optGame.get().getId())));
+            positionSession.insert(optGame.get());
+            positionSessionGameMap.put(optGame.get().getId(), optGame.get());
             return true;
         }
         return false;
@@ -144,6 +151,10 @@ public class GameService {
         ksession.fireAllRules();
         ksession.delete(ksession.getFactHandle(optGame.get()));
         gameRepository.save(optGame.get());
+        KieSession positionSession = kSessionService.getPositionSession(optGame.get().getUsername());
+        positionSession.delete(positionSession.getFactHandle(positionSessionGameMap.get(optGame.get().getId())));
+        positionSession.insert(optGame.get());
+        positionSessionGameMap.put(optGame.get().getId(), optGame.get());
         return true;
     }
 
@@ -228,6 +239,7 @@ public class GameService {
         if (type.equals("WIN")){
             roundResult = RoundResult.WIN;
         }
+        game.setRound(game.getRound() + 1);
         Calendar calendar = Calendar.getInstance();
         RoundResultEvent roundResultEvent = new RoundResultEvent();
         roundResultEvent.setResult(roundResult);
@@ -241,8 +253,8 @@ public class GameService {
     public String addGame(Authentication auth) {
         // TODO: Use actual username from user
 //        User user = (User) auth.getPrincipal();
+        kSessionService.resetPositionSession("test");
         KieSession ksession = kSessionService.getPositionSession("test");
-        ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").setFocus();
         Game game = new Game();
         game.setPhase(0);
         game.setHp(100);
@@ -252,6 +264,8 @@ public class GameService {
         game.setLevel(3);
         game.setGold(0);
         game.setTurn(1);
+        game.setComponents(new ArrayList<>());
+        game.setAugments(new ArrayList<>());
         game.setLatestHint(GameAction.SAVE_GOLD);
         game.setCurrentPosition(PlayerPosition.NEUTRAL);
         game.setCurrentPositionTrend(PlayerPositionTrend.NONE);
@@ -263,21 +277,24 @@ public class GameService {
         gameRepository.save(game);
         positionSessionGameMap.put(game.getId(), game);
         ksession.insert(game);
+        ksession.insert("GAME START");
         ksession.fireAllRules();
-        ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").clear();
         return game.getId().toString();
 
     }
 
     public String addTurn(Long gameId) {
-        Game game = positionSessionGameMap.get(gameId);
+        Game game = gameRepository.findById(gameId).orElseThrow();
         KieSession ksession = kSessionService.getPositionSession("test");
+        ksession.delete(ksession.getFactHandle(positionSessionGameMap.get(game.getId())));
+        ksession.insert(game);
         Calendar calendar = Calendar.getInstance();
         TurnStartEvent turnStartEvent = new TurnStartEvent();
         turnStartEvent.setTimestamp(calendar.getTime());
         ksession.insert(turnStartEvent);
         ksession.fireAllRules();
         gameRepository.save(game);
+        positionSessionGameMap.put(game.getId(), game);
         return "true";
     }
 

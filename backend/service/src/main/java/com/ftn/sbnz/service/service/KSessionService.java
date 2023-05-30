@@ -52,6 +52,13 @@ public class KSessionService {
         return mapCompositionSession.get(username);
     }
 
+    public void resetCompositionSession(String username) {
+        if (mapCompositionSession.containsKey(username)) {
+            mapCompositionSession.get(username).dispose();
+        }
+        createCompositionSession(username);
+    }
+
     private void createCompositionSession(String username) {
         KieServices ks = KieServices.Factory.get();
         KieContainer kc = ks.newKieClasspathContainer();
@@ -62,13 +69,18 @@ public class KSessionService {
         mapCompositionSession.put(username, ksession);
     }
 
-
-
     public KieSession getPositionSession(String username){
         if(!mapPositionSession.containsKey(username)){
             createPositionSession(username);
         }
         return mapPositionSession.get(username);
+    }
+
+    public void resetPositionSession(String username) {
+        if (mapPositionSession.containsKey(username)) {
+            mapPositionSession.get(username).dispose();
+        }
+        createPositionSession(username);
     }
 
     private void createPositionSession(String username) {
@@ -267,5 +279,4 @@ public class KSessionService {
 
         return kieHelper.build().newKieSession();
     }
-
 }

@@ -121,16 +121,16 @@ const handleGetHint = () => {
         </button>
 
         <!-- next turn -->
-        <button v-if="!showWinLossButtons" class="px-4 -mt-7 h-6  w-32 rounded-md mx-auto
+        <button v-if="!showWinLossButtons" class="px-4 -mt-7 h-6 w-32 rounded-md mx-auto
         bg-dork text-light font-medium hover:bg-opacity-80" @click="showWinLossButtons = true">
           Next Round
         </button>
-        <div v-if="showWinLossButtons" class="flex justify-center gap-x-2">
-          <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-primary text-black
+        <div v-if="showWinLossButtons" class="flex justify-center gap-x-1 w-32">
+          <button class="px-3 -mt-7 h-6 rounded-md mx-auto bg-primary text-black
           font-medium hover:bg-opacity-80" @click="handleNextRound('WIN')">
             WIN
           </button>
-          <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-secondary text-black
+          <button class="px-3 -mt-7 h-6 rounded-md mx-auto bg-secondary text-black
           font-medium hover:bg-opacity-80" @click="handleNextRound('LOSS')">
             LOSS
           </button>

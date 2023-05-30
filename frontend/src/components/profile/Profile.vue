@@ -51,10 +51,10 @@ const fetchHoursPlayed = () => {
     <div class="text-light text-4xl font-bold font-mono mt-2">{{ user.username }}</div>
     <div class="text-medium text-sm font-bold font-mono mt-0.5">{{ user.email }}</div>
     <div v-if="historyGrade" class="text-black font-bold mt-4 rounded-full bg-primary">
-      {{ historyGrade }}
+      Player grade: {{ historyGrade.replace('Adequate grade is: ', '') }}
     </div>
     <div v-if="hoursPlayed" class="text-black font-bold mt-2 rounded-full bg-secondary">
-      {{ hoursPlayed }}
+      Estimated hours played: {{ hoursPlayed.replace('Hours played is: ~', '') }}
     </div>
   </div>
 </template>

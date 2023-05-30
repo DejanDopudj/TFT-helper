@@ -49,7 +49,7 @@ public class Game {
     @OneToOne(cascade = CascadeType.ALL)
     private Player player;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Player> otherPlayers;
     @Transient
     private Map<Composition, Double> compValue = new HashMap<>();

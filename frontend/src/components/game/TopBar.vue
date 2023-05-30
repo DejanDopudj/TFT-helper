@@ -13,8 +13,8 @@ const game = ref(props.game)
 </script>
 
 <template>
-  <div class="relative flex justify-center gap-x-6 w-full mb-4 pointer-events-auto select-none">
-    <div class="flex justify-center w-140">
+  <div class="relative flex justify-center gap-x-6 w-full mb-4 pointer-events-none select-none">
+    <div class="flex justify-center w-140 pointer-events-auto">
       <div class="flex flex-col justify-center rounded-bl-xl bg-dork h-8 w-44
       border-medium text-light text-xl text-center px-10 font-medium">
         Turn {{ game.turn }}

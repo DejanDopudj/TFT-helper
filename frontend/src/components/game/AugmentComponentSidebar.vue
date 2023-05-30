@@ -1,7 +1,7 @@
 <script setup>
 import { ref, defineEmits, defineProps } from 'vue'
 
-const emit = defineEmits(['addAugments', 'addComponent'])
+const emit = defineEmits(['addAugments', 'addComponent', 'selectAugment'])
 
 const props = defineProps({
   augments: {
@@ -36,6 +36,10 @@ const openAugmentsAdder = () => {
   if (components.value.length > 0) emit('addAugments', augments.value)
 }
 
+const openSelectAugment = () => {
+  if (components.value.length > 0) emit('selectAugment')
+}
+
 const openComponentAdder = () => {
   emit('addComponent')
 }
@@ -54,7 +58,13 @@ const hasAcquiredAllMissingComponents = () => {
       <!-- augments -->
       <div>
         <div>
-          <div class="text-lg text-light font-medium text-center mb-1">Augments</div>
+          <div class="flex justify-center gap-x-1 text-lg text-light font-medium text-center mb-1">
+            <div>Augments</div>
+            <button class="w-8 h-8 text-medium hover:text-light text-sm" @click="openSelectAugment">
+              <font-awesome-icon icon="fa-solid fa-user-plus"
+              class="my-auto text-center mx-auto"/>
+            </button>
+          </div>
         </div>
 
         <div v-if="augments.length > 0" class="flex flex-col gap-y-1">
@@ -66,10 +76,11 @@ const hasAcquiredAllMissingComponents = () => {
         </div>
 
         <div v-if="augments.length < 3" class="w-full h-10 border border-dashed rounded-xl mt-2"
-        :class="[components.length > 0 ? 'animate-pulse cursor-pointer hover:opacity-90' : 'cursor-default']"
+        :class="[components.length > 0 ? 'animate-pulse cursor-pointer hover:opacity-90 border-light' : 'cursor-default border-medium']"
         @click="openAugmentsAdder">
           <div class="flex flex-col justify-center w-full h-full">
-            <font-awesome-icon v-if="components.length > 0" icon="fa-solid fa-plus" class="my-auto text-light text-3xl text-center mx-auto"/>
+            <font-awesome-icon v-if="components.length > 0" icon="fa-solid fa-plus"
+              class="my-auto text-light text-3xl text-center mx-auto"/>
             <div v-else class="text-medium text-center">Add a component first</div>
           </div>
         </div>

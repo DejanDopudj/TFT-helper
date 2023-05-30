@@ -22,6 +22,7 @@ public class Game {
     private Long id;
 
     private int round;
+    private int turn;
     private Streak streak = Streak.NONE;
     private String username;
 
@@ -62,6 +63,9 @@ public class Game {
     private int place;
 
     private String carry;
+
+    private PlayerPosition currentPosition;
+    private PlayerPositionTrend currentPositionTrend;
 
     public void addComponent(Component component){
         this.components.add(component);

@@ -104,8 +104,8 @@ public class GameController {
     }
 
     @PostMapping("/turn")
-    public String addTurn() {
-        return gameService.addTurn();
+    public String addTurn(@Valid @RequestBody IdDto idDto) {
+        return gameService.addTurn(idDto.getId());
     }
 
     @PostMapping("/action-classification")

@@ -6,12 +6,9 @@ import com.ftn.sbnz.model.event.RoundResultEvent;
 import com.ftn.sbnz.model.event.TurnStartEvent;
 import com.ftn.sbnz.service.dto.game.*;
 import com.ftn.sbnz.service.repository.*;
-import org.kie.api.KieServices;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,12 +31,19 @@ public class GameService {
     private CompositionRepository compositionRepository;
     @Autowired
     private KSessionService kSessionService;
+
+    private HashMap<Long, Game> positionSessionGameMap = new HashMap<>();
+
     public boolean increaseLevel(Long id){
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
-            optGame.get().setLevel(optGame.get().getLevel() + 1);
-            optGame.get().getPlayer().setLevel(optGame.get().getPlayer().getLevel() + 1);
-            gameRepository.save(optGame.get());
+            Game game = optGame.get();
+            game.setLevel(game.getLevel() + 1);
+            game.getPlayer().setLevel(game.getPlayer().getLevel() + 1);
+            gameRepository.save(game);
+            Game inMemoryGame = positionSessionGameMap.get(game.getId());
+            inMemoryGame.setLevel(inMemoryGame.getLevel() + 1);
+            inMemoryGame.getPlayer().setLevel(inMemoryGame.getPlayer().getLevel() + 1);
             return true;
         }
         return false;
@@ -47,9 +51,13 @@ public class GameService {
     public boolean decreaseLevel(Long id){
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
-            optGame.get().setLevel(optGame.get().getLevel() - 1);
-            optGame.get().getPlayer().setLevel(optGame.get().getPlayer().getLevel() - 1);
-            gameRepository.save(optGame.get());
+            Game game = optGame.get();
+            game.setLevel(game.getLevel() - 1);
+            game.getPlayer().setLevel(game.getPlayer().getLevel() - 1);
+            gameRepository.save(game);
+            Game inMemoryGame = positionSessionGameMap.get(game.getId());
+            inMemoryGame.setLevel(inMemoryGame.getLevel() - 1);
+            inMemoryGame.getPlayer().setLevel(inMemoryGame.getPlayer().getLevel() - 1);
             return true;
         }
         return false;
@@ -58,9 +66,13 @@ public class GameService {
     public boolean setGold(Long id, int gold){
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
-            optGame.get().setGold(gold);
-            optGame.get().getPlayer().setGold(gold);
-            gameRepository.save(optGame.get());
+            Game game = optGame.get();
+            game.setGold(gold);
+            game.getPlayer().setGold(gold);
+            gameRepository.save(game);
+            Game inMemoryGame = positionSessionGameMap.get(game.getId());
+            inMemoryGame.setGold(gold);
+            inMemoryGame.getPlayer().setGold(gold);
             return true;
         }
         return false;
@@ -77,9 +89,13 @@ public class GameService {
     public boolean setHP(Long id, int hp){
         Optional<Game> optGame = gameRepository.findById(id);
         if(optGame.isPresent()){
-            optGame.get().setHp(hp);
-            optGame.get().getPlayer().setHp(hp);
-            gameRepository.save(optGame.get());
+            Game game = optGame.get();
+            game.setHp(hp);
+            game.getPlayer().setHp(hp);
+            gameRepository.save(game);
+            Game inMemoryGame = positionSessionGameMap.get(game.getId());
+            inMemoryGame.setHp(hp);
+            inMemoryGame.getPlayer().setHp(hp);
             return true;
         }
         return false;
@@ -231,25 +247,32 @@ public class GameService {
         game.setRound(1);
         game.setLevel(3);
         game.setGold(0);
+        game.setTurn(1);
+        game.setCurrentPosition(PlayerPosition.NEUTRAL);
+        game.setCurrentPositionTrend(PlayerPositionTrend.NONE);
         List<Player> players = new ArrayList<>();
         for(int i = 0; i < 7; i++){
             players.add(new Player(100,3,0));
         }
         game.setOtherPlayers(players);
         gameRepository.save(game);
+        positionSessionGameMap.put(game.getId(), game);
+        ksession.insert(game);
         ksession.fireAllRules();
         ksession.getAgenda().getAgendaGroup("gameStartActivationGroup").clear();
         return game.getId().toString();
 
     }
 
-    public String addTurn() {
+    public String addTurn(Long gameId) {
+        Game game = positionSessionGameMap.get(gameId);
         KieSession ksession = kSessionService.getPositionSession("test");
         Calendar calendar = Calendar.getInstance();
         TurnStartEvent turnStartEvent = new TurnStartEvent();
         turnStartEvent.setTimestamp(calendar.getTime());
         ksession.insert(turnStartEvent);
         ksession.fireAllRules();
+        gameRepository.save(game);
         return "true";
     }
 
@@ -266,6 +289,8 @@ public class GameService {
         Game game = gameRepository.findById(otherPlayerDto.getGameId()).get();
         game.changePlayer(otherPlayerDto.getId(), otherPlayerDto.getHp(), otherPlayerDto.getLevel(), otherPlayerDto.getGold());
         gameRepository.save(game);
+        Game inMemoryGame = positionSessionGameMap.get(game.getId());
+        inMemoryGame.changePlayer(otherPlayerDto.getId(), otherPlayerDto.getHp(), otherPlayerDto.getLevel(), otherPlayerDto.getGold());
     }
 
     public Game getGameById(Long gameId) {

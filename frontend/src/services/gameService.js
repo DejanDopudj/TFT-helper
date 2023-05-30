@@ -112,3 +112,15 @@ export async function submitComponent(gameId, componentName, successCallback, er
     errorCallback()
   })
 }
+
+export async function startNextTurn(gameId, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/turn', { id: gameId })
+  .then(res => {
+    if (res.data === true) successCallback()
+    else errorCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}

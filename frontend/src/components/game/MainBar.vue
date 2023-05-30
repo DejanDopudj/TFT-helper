@@ -1,7 +1,10 @@
 <script setup>
-import { ref, defineEmits, defineProps, computed } from 'vue'
+import { ref, defineEmits, defineProps } from 'vue'
+import { useRoute } from 'vue-router'
+import { startNextTurn } from '../../services/gameService'
 
 const emit = defineEmits(['editPlayer'])
+const route = useRoute()
 
 const props = defineProps({
   game: {
@@ -19,6 +22,17 @@ const openPlayerEdit = (player) => {
 const getChampImage = (imageName) => {
   const img = '/src/assets/images/champs/' + imageName
   return img
+}
+
+const handleNextTurn = () => {
+  startNextTurn(
+    game.value.id,
+    () => {
+      window.location.href = `/game/${route.params.id}`
+    },
+    () => {
+      // boo hoo
+    });
 }
 
 </script>
@@ -50,12 +64,26 @@ const getChampImage = (imageName) => {
     </div>
     
     <div class="w-4/5 md:w-160 h-36 border border-dork rounded-xl">
-      <!-- gold -->
-      <div class="flex justify-center gap-x-2 px-4 -mt-6 w-24 h-6 rounded-t-md bg-dork mx-auto text-light">
-        <font-awesome-icon icon="fa-solid fa-coins" class="my-auto"/>
-        <div class="font-bold my-auto">
-          {{ game.player.gold }}
+      <div class="flex justify-between gap-x-32 w-full">
+        <!-- next turn -->
+        <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light
+        font-medium hover:bg-opacity-80" @click="handleNextTurn">
+          Next Turn
+        </button>
+
+        <!-- gold -->
+        <div class="flex justify-center gap-x-2 px-4 -mt-6 w-24 h-6 rounded-t-md bg-dork mx-auto text-light">
+          <font-awesome-icon icon="fa-solid fa-coins" class="my-auto"/>
+          <div class="font-bold my-auto">
+            {{ game.player.gold }}
+          </div>
         </div>
+
+        <!-- next turn -->
+        <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light
+        font-medium hover:bg-opacity-80">
+          Next Round
+        </button>
       </div>
 
       <div v-if="game.composition" class="flex justify-around h-full px-4 py-2 text-center">

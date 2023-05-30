@@ -7,6 +7,7 @@ import com.ftn.sbnz.model.event.PlayerPositionEvent;
 import com.ftn.sbnz.model.event.TurnStartEvent;
 import com.ftn.sbnz.model.RoundResult;
 import com.ftn.sbnz.model.PlayerPosition;
+import com.ftn.sbnz.model.PlayerPositionTrend;
 import com.ftn.sbnz.model.Game;
 import com.ftn.sbnz.model.Player;
 import com.ftn.sbnz.model.Streak;
@@ -129,6 +130,7 @@ rule "Detect turn"
                 );
         System.out.println("VALUE IS: " + positionValueEvent.getValue());
         insert(positionValueEvent);
+        modify($game) { setTurn($game.getTurn() + 1) };
         delete($t);
 end
 
@@ -151,32 +153,39 @@ end
 
 rule "Declare neutral player position"
     when
+        $game: Game()
         $p: PlayerPositionChangeEvent(value > -0.1, value < 0.1)
         not(PlayerPositionChangeEvent(this after $p))
     then
         System.out.println("NEUTRAL POSITION DECLARED");
         delete($p);
         insert(new PlayerPositionEvent(PlayerPosition.NEUTRAL));
+        modify($game) { setCurrentPosition(PlayerPosition.NEUTRAL)};
+        modify($game) { setCurrentPositionTrend(PlayerPositionTrend.NONE)};
 end
 
 rule "Declare negative player position"
     when
+        $game: Game()
         $p: PlayerPositionChangeEvent(value < -0.1)
         not(PlayerPositionChangeEvent(this after $p))
     then
         System.out.println("NEGATIVE POSITION DECLARED");
         delete($p);
         insert(new PlayerPositionEvent(PlayerPosition.NEGATIVE));
+        modify($game) { setCurrentPosition(PlayerPosition.NEGATIVE)};
 end
 
 rule "Declare positive player position"
     when
+        $game: Game()
         $p: PlayerPositionChangeEvent(value > 0.1)
         not(PlayerPositionChangeEvent(this after $p))
     then
         System.out.println("POSITIVE POSITION DECLARED");
         delete($p);
         insert(new PlayerPositionEvent(PlayerPosition.POSITIVE));
+        modify($game) { setCurrentPosition(PlayerPosition.POSITIVE)};
 end
 
 rule "Detect bad trend"
@@ -190,6 +199,7 @@ rule "Detect bad trend"
         )
     then
         System.out.println("BAD TREND. CHANGE YOUR STRATEGY.");
+        modify($game) { setCurrentPositionTrend(PlayerPositionTrend.BAD)};
 end
 
 rule "Detect good trend"
@@ -203,4 +213,5 @@ rule "Detect good trend"
         )
     then
         System.out.println("GREAT TREND. KEEP IT UP.");
+        modify($game) { setCurrentPositionTrend(PlayerPositionTrend.GOOD)};
 end

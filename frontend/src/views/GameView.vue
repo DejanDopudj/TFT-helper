@@ -9,6 +9,7 @@ import PlayerEditor from '../components/game/addons/PlayerEditor.vue';
 import AugmentComponentSidebar from '../components/game/AugmentComponentSidebar.vue';
 import AugmentAdder from '../components/game/addons/AugmentAdder.vue';
 import ComponentAdder from '../components/game/addons/ComponentAdder.vue';
+import TopBar from '../components/game/TopBar.vue';
 
 if (!isUserLoggedIn()) window.location.href = '/login'
 
@@ -52,6 +53,11 @@ const openComponentAdder = () => {
       <div class="absolute w-full h-screen flex flex-col justify-end pointer-events-none">
         <MainBar class="flex justify-center" @edit-player="openPlayerEdit" :game="game"/>
       </div>
+    
+      <div class="absolute w-full h-screen flex flex-col justify-start pointer-events-none">
+        <TopBar class="flex justify-center" @edit-player="openPlayerEdit" :game="game"/>
+      </div>
+
       <AugmentComponentSidebar class="absolute h-screen left-0 my-auto"
       @add-augments="openAugmentAdder" @add-component="openComponentAdder"
       :augments="game.augments" :components="game.components" :missingComponents="game.missingComponents"/>

@@ -62,6 +62,8 @@ public class Game {
 
     private int place;
 
+    private GameAction latestHint;
+
     private String carry;
 
     private PlayerPosition currentPosition;

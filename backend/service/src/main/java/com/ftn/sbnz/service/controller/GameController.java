@@ -121,8 +121,8 @@ public class GameController {
 
     @PostMapping("/action-classification")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void actionClassification(@Valid @RequestBody String gameId) {
-        gameService.actionClassification(gameId);
+    public String actionClassification(@Valid @RequestBody GameIdDto gameIdDto) {
+        return gameService.actionClassification(gameIdDto.getGameId());
     }
 
     @PostMapping("/change-other-player")

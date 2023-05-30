@@ -250,6 +250,7 @@ public class GameService {
         game.setLevel(3);
         game.setGold(0);
         game.setTurn(1);
+        game.setLatestHint(GameAction.SAVE_GOLD);
         game.setCurrentPosition(PlayerPosition.NEUTRAL);
         game.setCurrentPositionTrend(PlayerPositionTrend.NONE);
         List<Player> players = new ArrayList<>();
@@ -278,13 +279,14 @@ public class GameService {
         return "true";
     }
 
-    public void actionClassification(String gameId) {
+    public String actionClassification(String gameId) {
         KieSession ksession = kSessionService.getActionClassification();
         Game game = gameRepository.findById(Long.valueOf(gameId)).get();
         ksession.insert(game);
         ksession.fireAllRules();
         ksession.delete(ksession.getFactHandle(game));
-
+        gameRepository.save(game);
+        return game.getLatestHint().toString();
     }
 
     public void changeOtherPlayer(OtherPlayerDto otherPlayerDto) {

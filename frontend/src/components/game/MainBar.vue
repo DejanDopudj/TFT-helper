@@ -1,7 +1,7 @@
 <script setup>
 import { ref, defineEmits, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
-import { startNextTurn, startNextRound } from '../../services/gameService'
+import { startNextTurn, startNextRound, getHint } from '../../services/gameService'
 
 const emit = defineEmits(['editPlayer'])
 const route = useRoute()
@@ -15,6 +15,8 @@ const props = defineProps({
 
 const game = ref(props.game)
 const showWinLossButtons = ref(false)
+const hint = ref('')
+const showHint = ref(false)
 
 const openPlayerEdit = (player) => {
   emit('editPlayer', player)
@@ -42,6 +44,21 @@ const handleNextRound = (result) => {
     result,
     () => {
       window.location.href = `/game/${route.params.id}`
+    },
+    () => {
+      // boo hoo
+    });
+}
+
+const handleGetHint = () => {
+  getHint(
+    game.value.id,
+    (h) => {
+      showHint.value = true
+      hint.value = h
+      setTimeout(() => {
+        showHint.value = false
+      }, 2000)
     },
     () => {
       // boo hoo
@@ -94,12 +111,14 @@ const handleNextRound = (result) => {
         </button>
 
         <!-- gold -->
-        <div class="flex justify-center gap-x-2 px-4 -mt-6 w-24 h-6 rounded-t-md bg-dork mx-auto text-light">
-          <font-awesome-icon icon="fa-solid fa-coins" class="my-auto"/>
-          <div class="font-bold my-auto">
-            {{ game.player.gold }}
+        <button class="flex justify-center gap-x-2 px-4 -mt-6 w-32 h-6 rounded-t-md
+        bg-dork mx-auto text-light hover:bg-opacity-80" @click="handleGetHint" :disabled="showHint">
+          <font-awesome-icon v-if="!showHint" icon="fa-solid fa-coins" class="my-auto"/>
+          <div class="font-bold my-auto"
+          :class="[showHint ? 'text-primary' : 'text-light']">
+            {{ showHint ? hint.replaceAll('_', ' ') : game.player.gold}}
           </div>
-        </div>
+        </button>
 
         <!-- next turn -->
         <button v-if="!showWinLossButtons" class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light

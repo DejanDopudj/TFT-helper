@@ -149,3 +149,14 @@ export async function startNextRound(gameId, result, successCallback, errorCallb
   })
 }
 
+export async function getHint(gameId, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/action-classification', { gameId } )
+  .then(res => {
+    if (res.data) successCallback(res.data)
+    else errorCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}

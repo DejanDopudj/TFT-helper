@@ -105,7 +105,7 @@ const handleGetHint = () => {
 
       <div class="flex justify-between gap-x-32 w-full">
         <!-- next turn -->
-        <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light
+        <button class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light w-32
         font-medium hover:bg-opacity-80" @click="handleNextTurn">
           Next Turn
         </button>
@@ -121,8 +121,8 @@ const handleGetHint = () => {
         </button>
 
         <!-- next turn -->
-        <button v-if="!showWinLossButtons" class="px-4 -mt-7 h-6 rounded-md mx-auto bg-dork text-light
-        font-medium hover:bg-opacity-80" @click="showWinLossButtons = true">
+        <button v-if="!showWinLossButtons" class="px-4 -mt-7 h-6  w-32 rounded-md mx-auto
+        bg-dork text-light font-medium hover:bg-opacity-80" @click="showWinLossButtons = true">
           Next Round
         </button>
         <div v-if="showWinLossButtons" class="flex justify-center gap-x-2">

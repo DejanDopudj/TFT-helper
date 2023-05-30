@@ -160,3 +160,16 @@ export async function getHint(gameId, successCallback, errorCallback) {
     errorCallback()
   })
 }
+
+export async function getAugmentConnection(augment1, augment2, successCallback, errorCallback) {
+  axiosInstance({ requiresAuth: true }).post('/api/game/get-augment-connection', { augment1: augment1, augment2: augment2 } )
+  .then(res => {
+    console.log(res.data)
+    if (res.data) successCallback(res.data)
+    else errorCallback()
+  })
+  .catch(err => {
+    console.log(err)
+    errorCallback()
+  })
+}

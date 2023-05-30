@@ -5,12 +5,14 @@ import { isUserLoggedIn } from '../services/authService'
 import { getGame } from '../services/gameService'
 import PlayerSidebar from '../components/game/PlayerSidebar.vue';
 import MainBar from '../components/game/MainBar.vue';
+import TopBar from '../components/game/TopBar.vue';
+import ConnectionsButtons from '../components/game/ConnectionsButtons.vue';
 import PlayerEditor from '../components/game/addons/PlayerEditor.vue';
 import AugmentComponentSidebar from '../components/game/AugmentComponentSidebar.vue';
 import AugmentAdder from '../components/game/addons/AugmentAdder.vue';
 import ComponentAdder from '../components/game/addons/ComponentAdder.vue';
 import AugmentSelector from '../components/game/addons/AugmentSelector.vue';
-import TopBar from '../components/game/TopBar.vue';
+import AugmentConnector from '../components/game/addons/AugmentConnector.vue';
 
 if (!isUserLoggedIn()) window.location.href = '/login'
 
@@ -32,6 +34,8 @@ const playerBeingEdited = ref(null)
 const openAddAugments = ref(false)
 const openAddComponent = ref(false)
 const openSelectAugment = ref(false)
+const openConnectAugments = ref(false)
+const openConnectChamps = ref(false)
 
 const openPlayerEdit = (player) => {
   playerBeingEdited.value = player
@@ -48,6 +52,14 @@ const openComponentAdder = () => {
 
 const openAugmentSelector = () => {
   openSelectAugment.value = true
+}
+
+const openAugmentConnector = () => {
+  openConnectAugments.value = true
+}
+
+const openChampConnector = () => {
+  openConnectChamps.value = true
 }
 
 </script>
@@ -68,6 +80,9 @@ const openAugmentSelector = () => {
       @add-augments="openAugmentAdder" @add-component="openComponentAdder" @select-augment="openAugmentSelector"
       :augments="game.augments" :components="game.components" :missingComponents="game.missingComponents"/>
 
+      <ConnectionsButtons class="absolute h-screen right-0 pointer-events-none"
+      @show-augment-connections="openAugmentConnector" @show-champ-connections="openChampConnector"/>
+
       <PlayerEditor class="absolute h-screen flex justify-center"
       v-if="playerBeingEdited" :player="playerBeingEdited" @close="playerBeingEdited = null"
       :selfEdit="game.player.id === playerBeingEdited.id" :gameId="game.id"/>
@@ -79,6 +94,10 @@ const openAugmentSelector = () => {
       :missingComponents="game.missingComponents.filter(ms => !game.components.map(x => x.name).includes(ms.name))"/>
       <AugmentSelector class="absolute h-screen flex justify-center"
       v-if="openSelectAugment" @close="openSelectAugment = false"/>
+
+      <AugmentConnector class="absolute h-screen flex justify-center"
+      v-if="openConnectAugments" @close="openConnectAugments = false"/>
+
     </div>
 
     <div v-if="!game && showNotFound" class="h-screen flex flex-col justify-center text-center font-mono">

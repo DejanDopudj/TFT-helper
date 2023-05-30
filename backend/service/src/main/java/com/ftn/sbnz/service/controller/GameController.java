@@ -51,7 +51,6 @@ public class GameController {
         return ResponseEntity.ok(gameService.setPlace(idValueDto.getId(),idValueDto.getValue()));
     }
 
-
     @PostMapping("/add-component")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Boolean> addComponent(@Valid @RequestBody GameComponentDto gameComponentDto) {
